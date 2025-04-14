@@ -31,7 +31,24 @@ try:
     print(creds_dict)
 except json.JSONDecodeError as e:
     print(f"JSON 解碼錯誤: {e}")
-    
+if creds_json:
+    try:
+        # 將 JSON 字符串轉換為字典
+        creds_dict = json.loads(creds_json)
+        
+        # 打印憑證中的每個欄位
+        print("Private Key:", creds_dict.get("private_key"))
+        print("Client Email:", creds_dict.get("client_email"))
+        print("Client ID:", creds_dict.get("client_id"))
+        print("Project ID:", creds_dict.get("project_id"))
+        print("Auth URI:", creds_dict.get("auth_uri"))
+        print("Token URI:", creds_dict.get("token_uri"))
+        print("Client X509 Cert URL:", creds_dict.get("client_x509_cert_url"))
+        print("Auth Provider Cert URL:", creds_dict.get("auth_provider_x509_cert_url"))
+    except json.JSONDecodeError as e:
+        print("JSON 解碼錯誤:", e)
+else:
+    print("未找到 GOOGLE_CREDS_JSON 環境變數")
 def connect_sheet():
     try:
         creds_json = os.getenv("GOOGLE_CREDS_JSON")
