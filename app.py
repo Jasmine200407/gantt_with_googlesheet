@@ -135,6 +135,25 @@ def delete_task():
 @app.route('/')
 def home():
     return render_template('index.html')
+@app.route("/test-gs")
+def test_gs():
+    import os, json
+    from google.oauth2 import service_account
+    import gspread  # 如果您用gspread
+
+    try:
+        # 載入憑證資訊
+        creds_info = json.loads(os.environ["GOOGLE_CREDS_JSON"])
+        creds = service_account.Credentials.from_service_account_info(creds_info, scopes=["https://www.googleapis.com/auth/spreadsheets.readonly"])
+        # 連接 Google Sheet（使用gspread範例）
+        client = gspread.authorize(creds)
+        sheet = client.open_by_key("<您的試算表ID>")
+        data = sheet.sheet1.get_all_records()  # 或讀取第一行
+        return {"status": "success", "rows": len(data)}, 200
+    except Exception as e:
+        # 將錯誤轉為字串輸出
+        return {"status": "error", "message": str(e)}, 500
+
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))  # Render 預設是 10000
