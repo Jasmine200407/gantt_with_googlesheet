@@ -501,33 +501,45 @@ function fetchAndRenderTasks() {
   fetch(`${API_BASE}/tasks`)
     .then(res => res.json())
     .then(data => {
-      const grouped = {};
-      data.forEach(t => {
-        const key = t['專案名稱'];
-        if (!grouped[key]) {
-          grouped[key] = {
-            endText: t['專案截止日期'],
-            end: parseDate(t['專案截止日期']),
-            start: parseDate(t['開始日期']),
-            startText: t['開始日期'],
-            tasks: []
-          };
-        }
-        const taskStart = parseDate(t['開始日期']);
-        if (taskStart < grouped[key].start) {
-          grouped[key].start = taskStart;
-          grouped[key].startText = t['開始日期'];
-        }
-        grouped[key].tasks.push(t);
-      });
+      if (Array.isArray(data)) {
+        // 如果返回的是數組，繼續執行以下邏輯
+        const grouped = {};
+        data.forEach(t => {
+          const key = t['專案名稱'];
+          if (!grouped[key]) {
+            grouped[key] = {
+              endText: t['專案截止日期'],
+              end: parseDate(t['專案截止日期']),
+              start: parseDate(t['開始日期']),
+              startText: t['開始日期'],
+              tasks: []
+            };
+          }
+          const taskStart = parseDate(t['開始日期']);
+          if (taskStart < grouped[key].start) {
+            grouped[key].start = taskStart;
+            grouped[key].startText = t['開始日期'];
+          }
+          grouped[key].tasks.push(t);
+        });
 
-      document.getElementById('taskGroups').innerHTML = '';
-      Object.entries(grouped).forEach(([key, value]) => renderTaskGroup(key, value));
-      renderTable(data);
-      populateFilters(data);
-      updateMemoSuggestions(data);
+        // 渲染任務群組、表格和篩選器
+        document.getElementById('taskGroups').innerHTML = '';
+        Object.entries(grouped).forEach(([key, value]) => renderTaskGroup(key, value));
+        renderTable(data);
+        populateFilters(data);
+        updateMemoSuggestions(data);
+      } else {
+        console.error('API 返回的數據不是一個有效的數組', data);
+        // 可以在這裡顯示一個錯誤訊息給用戶
+      }
+    })
+    .catch(error => {
+      console.error('API 請求錯誤:', error);
+      // 可以在這裡顯示一個錯誤訊息給用戶
     });
 }
+
 
 // ✅ 畫面載入後初始化所有功能
 window.addEventListener('DOMContentLoaded', () => {
