@@ -25,6 +25,7 @@ def normalize_date(d):
             return d.strip()
 
 creds_json = os.getenv("GOOGLE_CREDS_JSON")
+print("GOOGLE_CREDS_JSON:", creds_json) 
 try:
     creds_dict = json.loads(creds_json)
     print(creds_dict)
