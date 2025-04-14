@@ -8,7 +8,6 @@ from datetime import datetime
 from oauth2client.service_account import ServiceAccountCredentials
 
 load_dotenv()
-
 app = Flask(__name__)
 CORS(app)
 
@@ -23,36 +22,39 @@ def normalize_date(d):
             return datetime.strptime(d, "%Y/%m/%d").strftime("%m/%d")
         except:
             return d.strip()
-
 creds_json = os.getenv("GOOGLE_CREDS_JSON")
-print("GOOGLE_CREDS_JSON:", creds_json) 
+print("GOOGLE_CREDS_JSON:", creds_json)  # 打印 GOOGLE_CREDS_JSON 以檢查是否正確載入
 try:
-    creds_dict = json.loads(creds_json)
+    creds_dict = json.loads(creds_json)  # 將 JSON 字串轉換為字典
     print(creds_dict)
     print("成功解析憑證：", creds_dict)
 except json.JSONDecodeError as e:
     print(f"JSON 解碼錯誤: {e}")
-creds_json = os.getenv("GOOGLE_CREDS_JSON")
-print("GOOGLE_CREDS_JSON:", creds_json)  # Check if it's loaded correctly
+
 def connect_sheet():
     try:
-        creds_json = os.getenv("GOOGLE_CREDS_JSON")
+        creds_json = os.getenv("GOOGLE_CREDS_JSON")  # 確保這裡使用正確的環境變數名稱
         if not creds_json:
             raise Exception("❌ GOOGLE_CREDS_JSON not found")
 
-        creds_dict = json.loads(creds_json)
+        creds_dict = json.loads(creds_json)  # 解析憑證字串為字典
         print("🔐 已成功載入服務帳號 JSON")
+        print("GOOGLE_CREDS_JSON:", creds_json)
+        print("creds_dict:", creds_dict)
 
+        # 定義 API 存取範圍
         scope = [
             'https://spreadsheets.google.com/feeds',
             'https://www.googleapis.com/auth/spreadsheets',
             'https://www.googleapis.com/auth/drive'
         ]
 
+        # 使用從環境變數加載的憑證字典建立憑證物件
         creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
         client = gspread.authorize(creds)
         sheet = client.open_by_key(SHEET_ID).worksheet(SHEET_NAME)
         return sheet
+
     except Exception as e:
         print("❌ connect_sheet 錯誤：", e)
         raise
