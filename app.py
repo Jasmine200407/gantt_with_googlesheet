@@ -41,13 +41,16 @@ def connect_sheet():
     try:
         creds_json = os.getenv("GOOGLE_CREDS_JSON")  # 確保這裡使用正確的環境變數名稱
         if not creds_json:
-            raise Exception("❌ GOOGLE_CREDS_JSON not found")
-
-        creds_dict = json.loads(creds_json)  # 解析憑證字串為字典
-        print("🔐 已成功載入服務帳號 JSON")
-        print("GOOGLE_CREDS_JSON:", creds_json)
-        print("creds_dict:", creds_dict)
-
+            raise Exception("❌ GOOGLE_CREDS_JSON 環境變數未找到！")
+        
+        # 嘗試解析 JSON
+        try:
+            creds_dict = json.loads(creds_json)  # 解析憑證字串為字典
+            print("🔐 成功解析服務帳號憑證 JSON")
+        except json.JSONDecodeError as e:
+            print(f"❌ JSON 解碼錯誤: {e}")
+            raise Exception("❌ GOOGLE_CREDS_JSON 格式錯誤")
+        
         # 定義 API 存取範圍
         scope = [
             'https://spreadsheets.google.com/feeds',
@@ -55,15 +58,22 @@ def connect_sheet():
             'https://www.googleapis.com/auth/drive'
         ]
 
-        # 使用從環境變數加載的憑證字典建立憑證物件
+        # 嘗試使用憑證來建立認證
         creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
+        print("🔐 成功建立服務帳戶認證")
+
+        # 嘗試授權並連接到 Google Sheets
         client = gspread.authorize(creds)
+        print("🔐 成功授權 Google Sheets API")
+
         sheet = client.open_by_key(SHEET_ID).worksheet(SHEET_NAME)
+        print(f"🔐 成功連接到工作表: {SHEET_NAME}")
+
         return sheet
 
     except Exception as e:
         print("❌ connect_sheet 錯誤：", e)
-        raise
+        raise  # 重新拋出異常以便在外部處理
 
 @app.route('/tasks', methods=['GET'])
 def get_tasks():
