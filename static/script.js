@@ -142,7 +142,7 @@ function renderTable(tasks) {
       });
 
       if (checked) {
-        fetch('http://localhost:5000/tasks', {
+        fetch('https://gantt-with-googlesheet.onrender.com/tasks', {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -385,7 +385,7 @@ function saveEdit() {
     '備註': document.getElementById('editMemo').value
   };
 
-  fetch('http://localhost:5000/tasks', {
+  fetch('https://gantt-with-googlesheet.onrender.com/tasks', {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(updatedTask)
