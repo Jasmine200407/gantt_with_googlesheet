@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>死線戰士</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css" />
+  <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+</head>
+
+<body>
+  <button class="intro-btn" onclick="toggleIntroModal()">使用說明</button>
+  <main id="ganttContainer" class="d-flex flex-row gap-4 px-3 py-3">
+    <section class="left-panel" id="taskGroups"></section>
+    <section class="right-panel">
+      <div class="card-section">
+        <div class="card-header">新增任務</div>
+        <form id="taskForm" class="grid-layout">
+          <div class="grid-item btn">
+            <button type="submit" class="circle-btn">點擊新增</button>
+          </div>
+          <div class="grid-item category">
+            <label for="taskCategory">專案類別</label>
+            <input id="taskCategory" placeholder="請輸入或選擇類別" required />
+          </div>
+          <div class="grid-item endtotal">
+            <label for="taskEndDate">專案截止時間</label>
+            <input type="text" id="taskEndDate" class="date-picker" placeholder="yyyy/MM/dd" required />
+          </div>
+          <div class="grid-item taskname">
+            <label for="taskName">任務名稱</label>
+            <input type="text" id="taskName" required />
+          </div>
+          <div class="grid-item start">
+            <label for="taskStartDate">開始日期</label>
+            <input type="text" id="taskStartDate" class="date-picker" placeholder="yyyy/MM/dd" required />
+          </div>
+          <div class="grid-item end">
+            <label for="taskFinishDate">結束日期</label>
+            <input type="text" id="taskFinishDate" class="date-picker" placeholder="yyyy/MM/dd" required />
+          </div>
+          <div class="grid-item memo" style="position: relative;">
+            <label for="taskMemo">備註</label>
+            <input type="text" id="taskMemo" placeholder="例如：外部連結、與誰合作..." autocomplete="off" />
+            <ul id="memoSuggestions" class="dropdown-list" style="display:none;"></ul>
+          </div>
+        </form>
+      </div>
+      <div class="card-section">
+        <div class="card-header">篩選任務</div>
+        <div class="filter-bar">
+          <div class="filter-item">
+            <label for="filterCategory">專案類別</label>
+            <select id="filterCategory">
+              <option value="all">全部</option>
+            </select>
+          </div>
+          <div class="filter-item">
+            <label for="taskFilterByDate">指定日期以前</label>
+            <input type="text" id="taskFilterByDate" class="date-picker" placeholder="yyyy/MM/dd" required />
+          </div>
+          <div class="filter-item memo">
+            <label for="filterMemo">備註關鍵字</label>
+            <input type="text" id="filterMemo" placeholder="例如：好難、報告…" autocomplete="off" />
+            <ul id="memoFilterSuggestions" class="dropdown-list" style="display:none;"></ul>
+          </div>
+        </div>
+        <div class="table-wrapper">
+          <table class="task-table">
+            <thead>
+              <tr>
+                <th>專案類別</th>
+                <th>任務名稱</th>
+                <th>開始日期</th>
+                <th>截止時間</th>
+                <th>倒數天數</th>
+                <th>備註</th>
+                <th>完成</th>
+              </tr>
+            </thead>
+            <tbody id="taskTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+    <div id="introModal" class="intro-modal hidden">
+      <div class="intro-content">
+        <h2>任務管理系統簡介</h2>
+        <p>「目標導向管理」設計支援與 Google Sheets 雲端同步<br />
+          並提供清晰的卡片式甘特圖與任務視覺化功能，幫助使用者即時掌握進度與安排。</p>
+        <h3>📌 三大核心特色：</h3>
+        <ul>
+          <strong>🔁雙向同步的 Google Sheets 資料庫：</strong><br />
+          設計目的：將常用的Google Sheet作為資料管理,並透過系統設計靈活運用資料
+          <ul style="margin-top: 0.5rem;">
+            <li>使用者可在前端頁面直接新增、修改、刪除任務，所有變動即時反映至 Google Sheets。<br />
+              在 Google Sheets 中編輯任務資料，也會同步呈現在系統上，免去搜尋困擾。</li>
+          </ul>
+          <strong>📊甘特圖卡片與進度小熊：</strong><br />
+          設計目的：從不同專案視角檢驗當前所有任務預計的進度安排並能輕鬆調整<br />
+          💡甘特圖卡片可以上下拖曳滿足優先度排序。<br />
+          完成、新增或編輯任務後，透過左側即時更新的甘特圖能確切掌握任務進度與當前狀況。
+          <ul style="margin-top: 0.5rem;">
+            <li>每個專案皆有獨立甘特圖，子任務依據倒數天數少至多上下排序顯示。<br />
+              超過任務結束日期時，該任務會自動隱藏。</li>
+            <li>跳動的「小熊」會根據當日位置在專案時間軸上自動移動<br />
+              幫助使用者及時調整排程，避免盲目堆積任務。</li>
+            <li>各任務的時間軸長度為任務時間，時間軸上文字為倒數天數，協助使用者察覺任務的調整需求或是進度合理性</li>
+          </ul>
+          <strong>🔍任務篩選：</strong><br />
+          設計目的：從需求情境設計篩選條件，靈活管理資料庫。透過不同條件搭配，幫助使用者從多種角度檢視任務狀況。<br />
+          💡點選鉛筆圖案：可以重新編輯任務。任務提早完成時也可直接勾選，刪除該項任務。
+          <ul style="margin-top: 0.5rem;">
+            <li>管理專案的需求：選取特定專案類別的任務</li>
+            <li>管理特定日期前應完成的任務：篩選特定日期前應完成的任務</li>
+            <li>管理其餘條件的需求：依據備註關鍵字(例如：合作對象)查詢任務<br />
+              備註欄位支援模糊搜尋與自動推薦輸入，提升搜尋效率。</li>
+          </ul>
+        </ul>
+        <p style="margin-top: 1rem;">
+          💡響應式設計：<br />半屏時左側(甘特圖區域)與右側(新增任務與任務篩選區)會改成上下顯示。調整視窗大小時，整體設計也會隨之調整。
+        </p>
+        <button class="modal-btn" onclick="toggleIntroModal()">關閉</button>
+      </div>
+    </div>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+
+</html>
