@@ -51,6 +51,8 @@ def connect_sheet():
             print(f"❌ JSON 解碼錯誤: {e}")
             raise Exception("❌ GOOGLE_CREDS_JSON 格式錯誤")
         
+        # 確保 private_key 中的換行符號被正確處理
+        creds_dict['private_key'] = creds_dict['private_key'].replace(r'\n', '\n')
         # 定義 API 存取範圍
         scope = [
             'https://spreadsheets.google.com/feeds',
