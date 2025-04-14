@@ -32,8 +32,8 @@ try:
     print("成功解析憑證：", creds_dict)
 except json.JSONDecodeError as e:
     print(f"JSON 解碼錯誤: {e}")
-else:
-    print("未找到 GOOGLE_CREDS_JSON 環境變數")
+creds_json = os.getenv("GOOGLE_CREDS_JSON")
+print("GOOGLE_CREDS_JSON:", creds_json)  # Check if it's loaded correctly
 def connect_sheet():
     try:
         creds_json = os.getenv("GOOGLE_CREDS_JSON")
