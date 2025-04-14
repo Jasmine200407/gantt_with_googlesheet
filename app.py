@@ -6,6 +6,7 @@ from datetime import datetime
 import os
 from dotenv import load_dotenv
 load_dotenv()
+from flask import Flask, request, jsonify, render_template
 
 app = Flask(__name__)
 CORS(app)
@@ -111,7 +112,9 @@ def update_task():
         return jsonify({'status': 'not found'}), 404
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-
+@app.route('/')
+def home():
+    return render_template('index.html') 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))  # Render 預設是 10000
     app.run(host='0.0.0.0', port=port,debug=True)
