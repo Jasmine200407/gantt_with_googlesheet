@@ -321,7 +321,7 @@ function handleForm() {
     submitBtn.disabled = true;
     submitBtn.textContent = "新增中...";
 
-    fetch('http://localhost:5000/tasks', {
+    fetch('https://gantt-with-googlesheet.onrender.com/tasks', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newTask)
@@ -497,7 +497,7 @@ function setupMemoSuggestion(inputElement, getSuggestionArray, onSelect) {
 
 // ✅ 從後端取得資料後依群組渲染甘特圖、表格、篩選器與備註建議
 function fetchAndRenderTasks() {
-  fetch('http://localhost:5000/tasks')
+  fetch('https://gantt-with-googlesheet.onrender.com/tasks')
     .then(res => res.json())
     .then(data => {
       const grouped = {};
