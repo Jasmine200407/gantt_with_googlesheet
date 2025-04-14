@@ -115,7 +115,7 @@ function renderTable(tasks) {
   <td>${t['專案名稱']}</td>
   <td>${t['任務名稱']}
     <button class="edit-btn" title="編輯任務">
-      <img src="pencil.png" alt="edit" class="edit-icon" />
+      <img src="{{ url_for('static', filename='pencil.png') }}"  alt="edit" class="edit-icon" />
     </button>
   </td>
   <td>${t['開始日期']}</td>
