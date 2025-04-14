@@ -355,7 +355,7 @@ input[list] {
   }
 }
 @media (max-width: 400px) {
-  .grid-layout {
+   .grid-layout {
     grid-template-columns: 1fr;  /* 讓所有元素顯示為單列 */
     grid-template-areas:
       "title"
@@ -366,34 +366,24 @@ input[list] {
       "endtotal"
       "btn";  /* 設定元素垂直顯示 */
   }
-
-  .circle-btn {
-    width: 20px;  /* 設定圓形按鈕的寬度 */
-    height: 20px; /* 設定圓形按鈕的高度 */
-    font-size: 0.9rem;  /* 設定按鈕的字體大小 */
+  .container {
+    gap: 10px;  /* 減少項目之間的間距 */
+  }
+  
+  /* 讓表格和卡片的寬度占滿螢幕 */
+  table, .task-group {
+    width: 100%;  /* 使表格和卡片寬度等於螢幕寬度 */
   }
 
-  /* 增加內邊距，避免擁擠 */
-  .grid-layout {
-    padding: 5px;  /* 增加內邊距 */
+  /* 調整內部字體和間距 */
+  .task-group {
+    font-size: 0.8rem;  /* 減小文字大小，適應小螢幕 */
+    padding: 1rem;  /* 減少內邊距 */
   }
 
-  /* 增加按鈕間距 */
-  .circle-btn {
-    margin: 5px;  /* 增加圓形按鈕間距 */
-  }
-
-  /* 如果需要，調整圓形按鈕的大小 */
-  .circle-btn {
-    width: 30px;  /* 增大按鈕的寬度 */
-    height: 30px; /* 增大按鈕的高度 */
-    font-size: 1rem;  /* 增大字體大小 */
-  }
-
-  /* 讓圖片自適應螢幕寬度 */
-  img {
-    max-width: 100%;  /* 保證圖片不超過容器的寬度 */
-    height: auto;  /* 保持圖片比例 */
+  table th, table td {
+    font-size: 0.8rem;  /* 減小表格內文字大小 */
+    padding: 8px;  /* 減小表格的內邊距 */
   }
 }
 
