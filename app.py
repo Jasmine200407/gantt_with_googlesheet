@@ -42,6 +42,7 @@ def get_tasks():
         data = sheet.get_all_records()
         return jsonify(data), 200
     except Exception as e:
+        print("❌ 取得任務失敗：", e)
         return jsonify({'error': str(e)}), 500
 
 @app.route('/tasks', methods=['POST'])
