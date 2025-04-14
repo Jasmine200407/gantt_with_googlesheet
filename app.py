@@ -17,23 +17,39 @@ SHEET_ID = '1dgxLSLBcjB0_56_8URBsYgP_pLBSz6SMBHXCr00YdW4'
 SHEET_NAME = 'april'
 
 def connect_sheet():
-    scope = ['https://spreadsheets.google.com/feeds',
-             'https://www.googleapis.com/auth/spreadsheets',
-             'https://www.googleapis.com/auth/drive']
-    creds_json = os.getenv("GOOGLE_CREDS_JSON")  # 從環境變數載入
-    creds_dict = json.loads(creds_json)
-    creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
-    client = gspread.authorize(creds) 
-    sheet = client.open_by_key(SHEET_ID).worksheet(SHEET_NAME)
-    return sheet
-def normalize_date(d):
     try:
-        return datetime.strptime(d, "%m/%d").strftime("%m/%d")
-    except:
-        try:
-            return datetime.strptime(d, "%Y/%m/%d").strftime("%m/%d")
-        except:
-            return d.strip()
+        print("📌 正在嘗試連接 Google Sheet...")
+
+        scope = [
+            'https://spreadsheets.google.com/feeds',
+            'https://www.googleapis.com/auth/spreadsheets',
+            'https://www.googleapis.com/auth/drive'
+        ]
+
+        creds_json = os.getenv("GOOGLE_CREDS_JSON")
+        if not creds_json:
+            print("❌ GOOGLE_CREDS_JSON 環境變數不存在！")
+            raise Exception("Missing GOOGLE_CREDS_JSON")
+
+        print("✅ 成功讀取 GOOGLE_CREDS_JSON，嘗試解析 JSON...")
+        creds_dict = json.loads(creds_json)
+
+        print("✅ JSON 解碼成功，建立認證物件...")
+        creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
+
+        print("✅ 認證成功，嘗試授權 gspread client...")
+        client = gspread.authorize(creds)
+
+        print(f"✅ 已授權，嘗試打開試算表 {SHEET_ID}，工作表 {SHEET_NAME}...")
+        sheet = client.open_by_key(SHEET_ID).worksheet(SHEET_NAME)
+
+        print("✅ 成功取得工作表！")
+        return sheet
+
+    except Exception as e:
+        print("❌ connect_sheet 出錯：", str(e))
+        raise  # 讓 Flask 把錯誤帶回前端
+
 
 @app.route('/tasks', methods=['GET'])
 def get_tasks():
