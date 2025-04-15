@@ -11,8 +11,8 @@ from flask import Flask, request, jsonify, render_template
 app = Flask(__name__)
 CORS(app)
 
-SHEET_ID = '1dgxLSLBcjB0_56_8URBsYgP_pLBSz6SMBHXCr00YdW4'
-SHEET_NAME = 'april'
+SHEET_ID = os.getenv('SHEET_ID')
+SHEET_NAME = os.getenv('SHEET_NAME')
 
 def connect_sheet():
     scope = ['https://spreadsheets.google.com/feeds',
