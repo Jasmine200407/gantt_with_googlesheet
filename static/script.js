@@ -5,18 +5,23 @@ function toggleIntroModal() {
 }
 // ============================
 // 🔧 工具區：日期處理 functions
-// ============================
 function parseDate(str) {
-  const parts = str.split('/');
+  if (!str || typeof str !== 'string') return new Date(NaN); // 處理空值或非字串
+
+  const parts = str.trim().split('/');
   if (parts.length === 3) {
     const [y, m, d] = parts.map(Number);
-    return new Date(y, m - 1, d);
+    const date = new Date(y, m - 1, d);
+    return isNaN(date.getTime()) ? new Date(NaN) : date;
   } else if (parts.length === 2) {
     const [m, d] = parts.map(Number);
-    return new Date(2025, m - 1, d); // 預設年份
+    const date = new Date(2025, m - 1, d); // 預設年份
+    return isNaN(date.getTime()) ? new Date(NaN) : date;
   }
-  return new Date();
+
+  return new Date(NaN); // 無法解析則回傳 NaN 日期
 }
+
 
 function formatDate(date) {
   const m = String(date.getMonth() + 1).padStart(2, '0');
@@ -86,7 +91,7 @@ function renderTaskGroup(groupKey, groupData) {
     bar.style.marginLeft = `${(offset / total) * 100}%`;
     bar.style.width = `${(duration / total) * 100}%`;
     const remainingDays = getDaysBetween(now, parseDate(t['結束日期']));
-    bar.textContent = `🕒${remainingDays}天`;
+    bar.innerHTML = `<img src='clock.png' style='width:16px;height:16px;margin-right:4px;'>${remainingDays}天`;
     bar.setAttribute('data-subtask', t['任務名稱']);
     group.appendChild(bar);
   });
@@ -115,7 +120,7 @@ function renderTable(tasks) {
   <td>${t['專案名稱']}</td>
   <td>${t['任務名稱']}
     <button class="edit-btn" title="編輯任務">
-      <img src="/static/pencil.png" alt="edit" class="edit-icon" />
+      <img src="pencil.png" alt="edit" class="edit-icon" />
     </button>
   </td>
   <td>${t['開始日期']}</td>
@@ -143,7 +148,7 @@ function renderTable(tasks) {
       });
 
       if (checked) {
-        fetch(`${API_BASE}/tasks`, {
+        fetch(API_BASE, {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -229,13 +234,16 @@ function populateFilters(data) {
       },
       onChange: function (value) {
         const endInput = document.getElementById('taskEndDate');
-        if (categoryEndDates[value]) {
-          const [m, d] = categoryEndDates[value].split('/');
-          const date = new Date(2025, parseInt(m) - 1, parseInt(d));
-          const formatted = `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`;
-          endInput.value = formatted;
-          endInput.setAttribute('readonly', true);
-          endInput.setAttribute('disabled', true);
+        const raw = categoryEndDates[value];
+
+        if (raw) {
+          const date = parseDate(raw); // 或使用 toIsoDate(raw)
+          if (!isNaN(date)) {
+            const formatted = `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`;
+            endInput.value = formatted;
+            endInput.setAttribute('readonly', true);
+            endInput.setAttribute('disabled', true);
+          }
         } else {
           endInput.value = '';
           endInput.removeAttribute('readonly');
@@ -322,7 +330,7 @@ function handleForm() {
     submitBtn.disabled = true;
     submitBtn.textContent = "新增中...";
 
-    fetch(`${API_BASE}/tasks`, {
+    fetch(API_BASE, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newTask)
@@ -386,7 +394,7 @@ function saveEdit() {
     '備註': document.getElementById('editMemo').value
   };
 
-  fetch(`${API_BASE}/tasks`, {
+  fetch(API_BASE, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(updatedTask)
@@ -498,48 +506,36 @@ function setupMemoSuggestion(inputElement, getSuggestionArray, onSelect) {
 
 // ✅ 從後端取得資料後依群組渲染甘特圖、表格、篩選器與備註建議
 function fetchAndRenderTasks() {
-  fetch(`${API_BASE}/tasks`)
+  fetch(API_BASE)
     .then(res => res.json())
     .then(data => {
-      if (Array.isArray(data)) {
-        // 如果返回的是數組，繼續執行以下邏輯
-        const grouped = {};
-        data.forEach(t => {
-          const key = t['專案名稱'];
-          if (!grouped[key]) {
-            grouped[key] = {
-              endText: t['專案截止日期'],
-              end: parseDate(t['專案截止日期']),
-              start: parseDate(t['開始日期']),
-              startText: t['開始日期'],
-              tasks: []
-            };
-          }
-          const taskStart = parseDate(t['開始日期']);
-          if (taskStart < grouped[key].start) {
-            grouped[key].start = taskStart;
-            grouped[key].startText = t['開始日期'];
-          }
-          grouped[key].tasks.push(t);
-        });
+      const grouped = {};
+      data.forEach(t => {
+        const key = t['專案名稱'];
+        if (!grouped[key]) {
+          grouped[key] = {
+            endText: t['專案截止日期'],
+            end: parseDate(t['專案截止日期']),
+            start: parseDate(t['開始日期']),
+            startText: t['開始日期'],
+            tasks: []
+          };
+        }
+        const taskStart = parseDate(t['開始日期']);
+        if (taskStart < grouped[key].start) {
+          grouped[key].start = taskStart;
+          grouped[key].startText = t['開始日期'];
+        }
+        grouped[key].tasks.push(t);
+      });
 
-        // 渲染任務群組、表格和篩選器
-        document.getElementById('taskGroups').innerHTML = '';
-        Object.entries(grouped).forEach(([key, value]) => renderTaskGroup(key, value));
-        renderTable(data);
-        populateFilters(data);
-        updateMemoSuggestions(data);
-      } else {
-        console.error('API 返回的數據不是一個有效的數組', data);
-        // 可以在這裡顯示一個錯誤訊息給用戶
-      }
-    })
-    .catch(error => {
-      console.error('API 請求錯誤:', error);
-      // 可以在這裡顯示一個錯誤訊息給用戶
+      document.getElementById('taskGroups').innerHTML = '';
+      Object.entries(grouped).forEach(([key, value]) => renderTaskGroup(key, value));
+      renderTable(data);
+      populateFilters(data);
+      updateMemoSuggestions(data);
     });
 }
-
 
 // ✅ 畫面載入後初始化所有功能
 window.addEventListener('DOMContentLoaded', () => {
@@ -553,4 +549,13 @@ window.addEventListener('DOMContentLoaded', () => {
 
   new Sortable(document.getElementById('taskGroups'), { animation: 150 });
   new Sortable(document.querySelector('.right-panel'), { animation: 150, handle: '.card-header' });
-});
+})
+function toIsoDate(str) {
+  const parts = String(str).split(/[\/\-]/).map(Number);
+  if (parts.length !== 3) return '';
+  const [y, m, d] = parts;
+  if (!y || !m || !d) return '';
+  return `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+}
+
+;
