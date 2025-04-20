@@ -568,6 +568,7 @@ input[list] {
 }
 
 /*=任務介紹區==*/
+/*=任務介紹區==*/
 .intro-content {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 16px;
@@ -577,21 +578,31 @@ input[list] {
   width: 90%;
   max-width: 800px;
   box-shadow: 0 0 20px #00f8f1a0;
-  font-family: 'Noto Serif TC';
+  font-family: 'Noto Serif TC', serif;
+
+  /* 🔽 這裡是關鍵：統一字體大小為 12px */
+  font-size: 12px;
+  line-height: 1.6;
 }
 
 .intro-content h2 {
-  font-size: 1rem;
+  font-size: 12px; /* 主標題 也用 12px */
   margin-bottom: 1rem;
   color: #00f8f1;
 }
 
-.intro-content ul {
-  margin-left: 1rem;
-  list-style: disc;
-  line-height: 1.4;
+.intro-content h3 {
+  font-size: 12px; /* 小標題 也用 12px */
+  margin-top: 1rem;
+  color: #ff00ff;
 }
 
+.intro-content ul {
+  margin-left: 1.2rem;
+  list-style: disc;
+  line-height: 1.6;
+  font-size: 12px;
+}
 .hidden {
   display: none;
 }
