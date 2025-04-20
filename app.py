@@ -109,7 +109,10 @@ def update_task():
 
 @app.route('/')
 def home():
-    return render_template('index.html') 
+    return render_template('index.html')
+@app.route('/goals')
+def goals():
+    return render_template("goals.html")
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))  # Render 預設是 10000
     app.run(host='0.0.0.0', port=port,debug=True)
