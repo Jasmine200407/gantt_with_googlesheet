@@ -148,7 +148,7 @@ function renderTable(tasks) {
       });
 
       if (checked) {
-        fetch(API_BASE, {
+        fetch(`${API_BASE}/tasks`, {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -330,7 +330,7 @@ function handleForm() {
     submitBtn.disabled = true;
     submitBtn.textContent = "新增中...";
 
-    fetch(API_BASE, {
+    fetch(`${API_BASE}/tasks`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newTask)
@@ -394,7 +394,7 @@ function saveEdit() {
     '備註': document.getElementById('editMemo').value
   };
 
-  fetch(API_BASE, {
+  fetch(`${API_BASE}/tasks`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(updatedTask)
@@ -506,7 +506,7 @@ function setupMemoSuggestion(inputElement, getSuggestionArray, onSelect) {
 
 // ✅ 從後端取得資料後依群組渲染甘特圖、表格、篩選器與備註建議
 function fetchAndRenderTasks() {
-  fetch(API_BASE)
+  fetch(`${API_BASE}/tasks`)
     .then(res => res.json())
     .then(data => {
       const grouped = {};
