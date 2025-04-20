@@ -13,10 +13,7 @@
 </head>
 
 <body>
-  <a href="goals.html" class="intro-btn"
-    style="left: 20px; right: auto; background: linear-gradient(135deg, #ff00ff, #00f8f1);">
-    甘特圖合併專區
-  </a>
+  <a href="{{ url_for('goals') }}" class="intro-btn">style="left: 20px; right: auto; background: linear-gradient(135deg, #ff00ff, #00f8f1);">甘特圖合併專區</a>
   <button class="intro-btn" onclick="toggleIntroModal()">使用說明</button>
   <main id="ganttContainer" class="d-flex flex-row gap-4 px-3 py-3">
     <section class="left-panel" id="taskGroups"></section>
