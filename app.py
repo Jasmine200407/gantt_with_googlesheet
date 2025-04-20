@@ -18,19 +18,11 @@ def connect_sheet():
     scope = ['https://spreadsheets.google.com/feeds',
              'https://www.googleapis.com/auth/spreadsheets',
              'https://www.googleapis.com/auth/drive']
-    creds_path = '/etc/secrets/creds.json'
+    creds_path = 'C:\\Users\\Jasmine\\OneDrive\\Desktop\\個人網頁作業\\try\\backend\\creds.json'
     creds = ServiceAccountCredentials.from_json_keyfile_name(creds_path, scope)
     client = gspread.authorize(creds)
     sheet = client.open_by_key(SHEET_ID).worksheet(SHEET_NAME)
     return sheet
-def normalize_date(d):
-    try:
-        return datetime.strptime(d, "%m/%d").strftime("%m/%d")
-    except:
-        try:
-            return datetime.strptime(d, "%Y/%m/%d").strftime("%m/%d")
-        except:
-            return d.strip()
 
 @app.route('/tasks', methods=['GET'])
 def get_tasks():
@@ -65,14 +57,14 @@ def delete_task():
         task_data = request.json
 
         task_name = str(task_data.get('任務名稱', '')).strip()
-        start_date = normalize_date(task_data.get('開始日期', ''))
-        end_date = normalize_date(task_data.get('結束日期', ''))
+        start_date = task_data.get('開始日期', '')
+        end_date = task_data.get('結束日期', '')
 
         records = sheet.get_all_records()
         for index, row in enumerate(records, start=2):  # 從第 2 列開始是資料列
             row_name = str(row.get('任務名稱', '')).strip()
-            row_start = normalize_date(row.get('開始日期', ''))
-            row_end = normalize_date(row.get('結束日期', ''))
+            row_start = row.get('開始日期', '')
+            row_end = row.get('結束日期', '')
 
             # ✅ 改為標準化比對
             if row_name == task_name and row_start == start_date and row_end == end_date:
@@ -112,6 +104,7 @@ def update_task():
         return jsonify({'status': 'not found'}), 404
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
 @app.route('/')
 def home():
     return render_template('index.html') 
