@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gantt-chart Kitchen</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+</head>
+
+<body>
+    <!-- 🔙 回首頁按鈕 -->
+    <a href="index.html" class="back-btn">回首頁</a>
+
+    <main id="ganttContainer">
+        <!-- 左側：書櫃區與控制區 -->
+        <div id="taskManagerContainer">
+            <div id="cardShelf"></div>
+            <div class="card-section">
+                <div class="card-header">請拖入要合併的專案類別</div>
+                <div id="fusionDropZone"></div>
+                <div class="fusion-controls">
+                    <input type="text" class="fusion-input" placeholder="輸入合併後的卡片名稱" id="fusionName">
+                    <button class="circle-btn" id="createFusion">合併專案卡片</button>
+                    <button class="circle-btn" id="selectAllFusion">專案全選</button>
+                    <button class="circle-btn" id="clearFusion">清空選擇</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右側：融合任務結果 -->
+        <div class="right-side">
+            <section id="fusionResult" class="left-panel"></section>
+        </div>
+    </main>
+
+    <script src="goals.js"></script>
+</body>
+
+</html>
