@@ -15,11 +15,15 @@ SHEET_ID = os.getenv('SHEET_ID')
 SHEET_NAME = os.getenv('SHEET_NAME')
 
 def connect_sheet():
-    scope = ['https://spreadsheets.google.com/feeds',
-             'https://www.googleapis.com/auth/spreadsheets',
-             'https://www.googleapis.com/auth/drive']
-    creds_path = 'C:\\Users\\Jasmine\\OneDrive\\Desktop\\個人網頁作業\\try\\backend\\creds.json'
-    creds = ServiceAccountCredentials.from_json_keyfile_name(creds_path, scope)
+    scope = [
+        'https://spreadsheets.google.com/feeds',
+        'https://www.googleapis.com/auth/spreadsheets',
+        'https://www.googleapis.com/auth/drive'
+    ]
+    # 從環境變數讀取 JSON 並建立 credentials
+    creds_json = os.environ.get('GOOGLE_CREDS_JSON')
+    creds_dict = json.loads(creds_json)
+    creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
     client = gspread.authorize(creds)
     sheet = client.open_by_key(SHEET_ID).worksheet(SHEET_NAME)
     return sheet
