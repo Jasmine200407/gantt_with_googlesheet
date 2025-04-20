@@ -179,7 +179,7 @@ function renderMergedGroup(groupKey, groupData) {
 // 🗕️ 抓取資料並顯示書櫃卡片
 // ===========================
 function fetchTasksAndInit() {
-    fetch(API_BASE)
+    fetch(`${API_BASE}/tasks`)
         .then(res => res.json())
         .then(data => {
             allTasks = data;
