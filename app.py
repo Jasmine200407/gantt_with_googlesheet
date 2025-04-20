@@ -20,10 +20,8 @@ def connect_sheet():
         'https://www.googleapis.com/auth/spreadsheets',
         'https://www.googleapis.com/auth/drive'
     ]
-    # 從環境變數讀取 JSON 並建立 credentials
-    creds_json = os.environ.get('GOOGLE_CREDS_JSON')
-    creds_dict = json.loads(creds_json)
-    creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
+    creds_path = '/etc/secrets/creds.json'  # 🔐 使用 Render Secret File 提供的絕對路徑
+    creds = ServiceAccountCredentials.from_json_keyfile_name(creds_path, scope)
     client = gspread.authorize(creds)
     sheet = client.open_by_key(SHEET_ID).worksheet(SHEET_NAME)
     return sheet
