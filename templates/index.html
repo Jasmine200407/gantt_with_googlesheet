@@ -13,6 +13,10 @@
 </head>
 
 <body>
+  <a href="goals.html" class="intro-btn"
+    style="left: 20px; right: auto; background: linear-gradient(135deg, #ff00ff, #00f8f1);">
+    甘特圖合併專區
+  </a>
   <button class="intro-btn" onclick="toggleIntroModal()">使用說明</button>
   <main id="ganttContainer" class="d-flex flex-row gap-4 px-3 py-3">
     <section class="left-panel" id="taskGroups"></section>
@@ -90,16 +94,21 @@
     <div id="introModal" class="intro-modal hidden">
       <div class="intro-content">
         <h2>任務管理系統簡介</h2>
-        <p>「目標導向管理」設計支援與 Google Sheets 雲端同步<br />
-          並提供清晰的卡片式甘特圖與任務視覺化功能，幫助使用者即時掌握進度與安排。</p>
-        <h3>📌 三大核心特色：</h3>
+        <p>
+          「目標導向管理」設計支援與 Google Sheets 雲端同步<br />
+          並提供清晰的卡片式甘特圖與任務視覺化功能，幫助使用者即時掌握進度與安排。
+        </p>
+
+        <h3>📌 四大核心特色：</h3>
         <ul>
+
           <strong>🔁雙向同步的 Google Sheets 資料庫：</strong><br />
           設計目的：將常用的Google Sheet作為資料管理,並透過系統設計靈活運用資料
           <ul style="margin-top: 0.5rem;">
             <li>使用者可在前端頁面直接新增、修改、刪除任務，所有變動即時反映至 Google Sheets。<br />
               在 Google Sheets 中編輯任務資料，也會同步呈現在系統上，免去搜尋困擾。</li>
           </ul>
+
           <strong>📊甘特圖卡片與進度小熊：</strong><br />
           設計目的：從不同專案視角檢驗當前所有任務預計的進度安排並能輕鬆調整<br />
           💡甘特圖卡片可以上下拖曳滿足優先度排序。<br />
@@ -110,20 +119,26 @@
             <li>跳動的「小熊」會根據當日位置在專案時間軸上自動移動<br />
               幫助使用者及時調整排程，避免盲目堆積任務。</li>
             <li>各任務的時間軸長度為任務時間，時間軸上文字為倒數天數，協助使用者察覺任務的調整需求或是進度合理性</li>
+            </li>
           </ul>
+
           <strong>🔍任務篩選：</strong><br />
           設計目的：從需求情境設計篩選條件，靈活管理資料庫。透過不同條件搭配，幫助使用者從多種角度檢視任務狀況。<br />
           💡點選鉛筆圖案：可以重新編輯任務。任務提早完成時也可直接勾選，刪除該項任務。
           <ul style="margin-top: 0.5rem;">
             <li>管理專案的需求：選取特定專案類別的任務</li>
-            <li>管理特定日期前應完成的任務：篩選特定日期前應完成的任務</li>
+            <li>管理特定日期前應完成的任務：篩軒特定日期前應完成的任務</li>
             <li>管理其餘條件的需求：依據備註關鍵字(例如：合作對象)查詢任務<br />
               備註欄位支援模糊搜尋與自動推薦輸入，提升搜尋效率。</li>
           </ul>
+          <strong>📚 多任務合併：</strong><br />
+          設計目的：將多個不同專案的任務合併為一張多專案卡片，方便跨專案統整與進度追蹤，提升管理效率與視覺整合性。<br />
+          💡拖曳專案卡片至融合區：可自訂組合與名稱，協助你整合不同來源的任務並同時追蹤。
+          <ul style="margin-top: 0.5rem;">
+            <li>自動計算總體時程：取多任務最早開始日、最晚結束日。</li>
+            <li>任務顏色／標籤區分：辨識專案來源，區別各項任務的專案來源。</li>
+          </ul>
         </ul>
-        <p style="margin-top: 1rem;">
-          💡響應式設計：<br />半屏時左側(甘特圖區域)與右側(新增任務與任務篩選區)會改成上下顯示。調整視窗大小時，整體設計也會隨之調整。
-        </p>
         <button class="modal-btn" onclick="toggleIntroModal()">關閉</button>
       </div>
     </div>
