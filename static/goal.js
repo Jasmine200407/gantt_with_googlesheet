@@ -120,7 +120,6 @@ function renderMergedGroup(groupKey, groupData) {
         alert("融合卡片失敗：日期欄位錯誤或遺失");
         return;
     }
-    console.log("🧱 任務：", t['專案名稱'], t['任務名稱'], "開始：", t['開始日期'], "解析後：", parseDate(t['開始日期']), "→ offset 天數：", getDaysBetween(start, parseDate(t['開始日期'])));
 
     const start = new Date(Math.min(...startDates));
     const end = new Date(Math.max(...projectEndDates));
@@ -155,6 +154,7 @@ function renderMergedGroup(groupKey, groupData) {
         const offset = getOffsetDays(start, taskStart);
         const duration = getDurationDays(taskStart, taskEnd);
         const total = getDurationDays(start, end);
+        console.log("🧱 任務：", t['專案名稱'], t['任務名稱'], "開始：", t['開始日期'], "解析後：", parseDate(t['開始日期']), "→ offset 天數：", getDaysBetween(start, parseDate(t['開始日期'])));
         bar.style.marginLeft = `${(offset / total) * 100}%`;
         bar.style.width = `${(duration / total) * 100}%`;
 
