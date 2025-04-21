@@ -91,7 +91,7 @@ function renderTaskGroup(groupKey, groupData) {
     bar.style.marginLeft = `${(offset / total) * 100}%`;
     bar.style.width = `${(duration / total) * 100}%`;
     const remainingDays = getDaysBetween(now, parseDate(t['結束日期']));
-    bar.innerHTML = `<img src='clock.png' style='width:16px;height:16px;margin-right:4px;'>${remainingDays}天`;
+    bar.innerHTML = `<img src='/static/clock.png' style='width:16px;height:16px;margin-right:4px;'>${remainingDays}天`;
     bar.setAttribute('data-subtask', t['任務名稱']);
     group.appendChild(bar);
   });
@@ -120,7 +120,7 @@ function renderTable(tasks) {
   <td>${t['專案名稱']}</td>
   <td>${t['任務名稱']}
     <button class="edit-btn" title="編輯任務">
-      <img src="pencil.png" alt="edit" class="edit-icon" />
+      <img src='/static/pencil.png' alt="edit" class="edit-icon" />
     </button>
   </td>
   <td>${t['開始日期']}</td>
