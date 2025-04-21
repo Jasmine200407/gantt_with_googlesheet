@@ -104,6 +104,19 @@ body {
   right: 0;
 }
 
+.little-man {
+  width: 40px;
+  height: 40px;
+  background-image: url('bear.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  position: absolute;
+  top: -15px;
+  transition: left 0.5s ease-in-out;
+  animation: float 1s ease-in-out infinite;
+  z-index: 10;
+}
+
 @keyframes float {
 
   0%,
@@ -555,7 +568,6 @@ input[list] {
 }
 
 /*=任務介紹區==*/
-/*=任務介紹區==*/
 .intro-content {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 16px;
@@ -565,31 +577,21 @@ input[list] {
   width: 90%;
   max-width: 800px;
   box-shadow: 0 0 20px #00f8f1a0;
-  font-family: 'Noto Serif TC', serif;
-
-  /* 🔽 這裡是關鍵：統一字體大小為 12px */
-  font-size: 12px;
-  line-height: 1.6;
+  font-family: 'Noto Serif TC';
 }
 
 .intro-content h2 {
-  font-size: 12px; /* 主標題 也用 12px */
+  font-size: 1rem;
   margin-bottom: 1rem;
   color: #00f8f1;
 }
 
-.intro-content h3 {
-  font-size: 12px; /* 小標題 也用 12px */
-  margin-top: 1rem;
-  color: #ff00ff;
+.intro-content ul {
+  margin-left: 1rem;
+  list-style: disc;
+  line-height: 1.4;
 }
 
-.intro-content ul {
-  margin-left: 1.2rem;
-  list-style: disc;
-  line-height: 1.6;
-  font-size: 12px;
-}
 .hidden {
   display: none;
 }
@@ -811,11 +813,6 @@ input[list] {
   right: 0;
 }
 
-.timeline-wrapper {
-  position: relative;
-  height: 60px; /* 給小熊空間浮起來 */
-}
-
 .little-man {
   width: 40px;
   height: 40px;
@@ -824,7 +821,6 @@ input[list] {
   background-repeat: no-repeat;
   position: absolute;
   top: -15px;
-  transform: translateX(-50%); /* ✅ 中心對齊 */
   transition: left 0.5s ease-in-out;
   animation: float 1s ease-in-out infinite;
   z-index: 10;
@@ -1065,14 +1061,3 @@ input[list] {
   transform: translateY(-2px);
   box-shadow: 0 0 12px #fff0f5, 0 0 20px #ff80c0;
 }
-.task-bar-wrapper {
-  position: relative;
-  height: 30px;
-}
-
-.task-bar {
-  position: absolute;
-  top: 0;
-  height: 24px;
-}
-
