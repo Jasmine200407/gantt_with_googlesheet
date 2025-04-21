@@ -104,19 +104,6 @@ body {
   right: 0;
 }
 
-.little-man {
-  width: 40px;
-  height: 40px;
-  background-image: url('bear.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-  position: absolute;
-  top: -15px;
-  transition: left 0.5s ease-in-out;
-  animation: float 1s ease-in-out infinite;
-  z-index: 10;
-}
-
 @keyframes float {
 
   0%,
@@ -824,18 +811,26 @@ input[list] {
   right: 0;
 }
 
+.timeline-wrapper {
+  position: relative;
+  height: 60px; /* 給小熊空間浮起來 */
+}
+
 .little-man {
+  position: absolute;
+  top: -20px;
   width: 40px;
   height: 40px;
   background-image: url('bear.png');
   background-size: contain;
   background-repeat: no-repeat;
-  position: absolute;
-  top: -15px;
+  background-position: center;
+  transform: translateX(-50%);
   transition: left 0.5s ease-in-out;
-  animation: float 1s ease-in-out infinite;
+  animation: float 1.2s ease-in-out infinite;
   z-index: 10;
 }
+
 
 @keyframes float {
 
