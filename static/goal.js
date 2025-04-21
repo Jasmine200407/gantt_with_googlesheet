@@ -31,6 +31,8 @@ function getDurationDays(start, end) {
 function todayPosition(start, end) {
     const now = new Date();
     now.setHours(0, 0, 0, 0);
+    start.setHours(0, 0, 0, 0);
+    end.setHours(0, 0, 0, 0);
     const totalMs = end - start + 86400000;
     const passedMs = now - start;
     return Math.min(100, Math.max(0, (passedMs / totalMs) * 100));
@@ -141,9 +143,8 @@ function renderMergedGroup(groupKey, groupData) {
     littleMan.className = 'little-man';
     littleMan.style.left = `${todayPosition(start, end)}%`;
     littleMan.style.transform = 'translateX(-50%)';
-    timeline.appendChild(littleMan);
-
     group.appendChild(timeline);
+    timeline.appendChild(littleMan);
 
     const colorMap = {};
     const legend = document.createElement("div");
