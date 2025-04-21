@@ -817,20 +817,18 @@ input[list] {
 }
 
 .little-man {
-  position: absolute;
-  top: -20px;
   width: 40px;
   height: 40px;
   background-image: url('bear.png');
   background-size: contain;
   background-repeat: no-repeat;
-  background-position: center;
-  transform: translateX(-50%);
+  position: absolute;
+  top: -15px;
+  transform: translateX(-50%); /* ✅ 中心對齊 */
   transition: left 0.5s ease-in-out;
-  animation: float 1.2s ease-in-out infinite;
+  animation: float 1s ease-in-out infinite;
   z-index: 10;
 }
-
 
 @keyframes float {
 
