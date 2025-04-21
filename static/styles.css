@@ -687,6 +687,36 @@ input[list] {
   padding: 0;
   box-sizing: border-box;
 }
+/* === 📱 響應式調整 === */
+@media (max-width: 1100px) {
+  #ganttContainer {
+    flex-direction: column !important;
+  }
+
+  .filter-bar {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .grid-layout {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "title"
+      "category"
+      "taskname"
+      "start"
+      "end"
+      "endtotal"
+      "btn";
+  }
+
+  .circle-btn {
+    width: 80px;
+    height: 80px;
+    font-size: 0.9rem;
+  }
+}
 
 @media (max-width: 1100px) {
   #ganttContainer {
