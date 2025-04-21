@@ -152,7 +152,7 @@ function renderMergedGroup(groupKey, groupData) {
 
         const remainingDays = getDaysBetween(now, taskEnd);
         const projectName = t['專案名稱'];
-        bar.innerHTML = `<img src='clock.png' style='width:16px;height:16px;margin-right:4px;'>${remainingDays}天`;
+        bar.innerHTML = `<img src='/static/clock.png' style='width:16px;height:16px;margin-right:4px;'>${remainingDays}天`;
         bar.setAttribute('data-subtask', `${projectName} - ${t['任務名稱']}`);
         bar.title = `開始：${t['開始日期']}\n結束：${t['結束日期']}`;
 
