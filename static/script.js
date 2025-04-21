@@ -70,15 +70,19 @@ function renderTaskGroup(groupKey, groupData) {
     const start = groupData.start;
     const end = groupData.end;
     const now = new Date();
-
+    
     const timeline = document.createElement('div');
     timeline.className = 'timeline-wrapper';
     timeline.innerHTML = `
-    <div class="timeline-label start">${groupData.startText}</div>
-    <div class="little-man" style="left: ${todayPosition(start, end)}%"></div>
-    <div class="timeline-line"></div>
-    <div class="timeline-label end">${groupData.endText}</div>
-  `;
+      <div class="timeline-label start">${groupData.startText}</div>
+      <div class="timeline-line"></div>
+      <div class="timeline-label end">${groupData.endText}</div>
+    `;
+    
+    const littleMan = document.createElement('div');
+    littleMan.className = 'little-man';
+    littleMan.style.left = `${todayPosition(start, end)}%`;
+    timeline.appendChild(littleMan);
     group.appendChild(timeline);
 
     const sortedTasks = [...groupData.tasks].sort((a, b) => {
