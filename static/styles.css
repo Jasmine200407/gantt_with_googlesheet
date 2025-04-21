@@ -1065,3 +1065,14 @@ input[list] {
   transform: translateY(-2px);
   box-shadow: 0 0 12px #fff0f5, 0 0 20px #ff80c0;
 }
+.task-bar-wrapper {
+  position: relative;
+  height: 30px;
+}
+
+.task-bar {
+  position: absolute;
+  top: 0;
+  height: 24px;
+}
+
