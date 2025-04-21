@@ -152,7 +152,19 @@ function renderGroup(groupKey, groupData) {
 
     document.getElementById('taskGroups').appendChild(group);
 }
-
+// ===========================
+// 🗕️ 抓取資料並顯示書櫃卡片
+// ===========================
+function fetchTasksAndInit() {
+    fetch(API_BASE)
+        .then(res => res.json())
+        .then(data => {
+            allTasks = data;
+            const shelf = document.getElementById("cardShelf");
+            const categories = [...new Set(data.map(t => t['專案名稱']))];
+            categories.forEach(cat => shelf.appendChild(createShelfCard(cat)));
+        });
+}
 // ===========================
 // ✨ 拖曳融合操作設定
 // ===========================
