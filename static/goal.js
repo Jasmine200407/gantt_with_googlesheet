@@ -144,8 +144,7 @@ function renderMergedGroup(groupKey, groupData) {
     littleMan.style.left = `${todayPosition(start, end)}%`;
     littleMan.style.transform = 'translateX(-50%)';
     timeline.appendChild(littleMan);
-
-    timeline.appendChild(littleMan);
+    group.appendChild(timeline);
 
     const colorMap = {};
     const legend = document.createElement("div");
