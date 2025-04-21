@@ -336,6 +336,36 @@ input[list] {
   width: 100%;
 }
 
+/* === 📱 響應式調整 === */
+@media (max-width: 1100px) {
+  #ganttContainer {
+    flex-direction: column !important;
+  }
+
+  .filter-bar {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .grid-layout {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "title"
+      "category"
+      "taskname"
+      "start"
+      "end"
+      "endtotal"
+      "btn";
+  }
+
+  .circle-btn {
+    width: 80px;
+    height: 80px;
+    font-size: 0.9rem;
+  }
+}
 
 /* === 📦 卡片外框區（分類） === */
 .card-section {
@@ -637,42 +667,7 @@ input[list] {
 
 /* === 🧩 書櫃式融合卡片系統（新增功能樣式） === */
 
-/* === 🌌 左右欄基礎排版 === */
-#ganttContainer {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 1rem;
-  width: 100%;
-  box-sizing: border-box;
-  flex-wrap: wrap;
-}
-
-/* 左右欄各自佔一半（桌面） */
-.left-side,
-.right-side {
-  width: 50%;
-  padding: 1rem;
-  box-sizing: border-box;
-}
-
-/* 卡片容器樣式 */
-#fusionResult {
-  width: 100%;
-  box-sizing: border-box;
-}
-
-/* 任務卡片樣式（桌面預設） */
-#fusionResult .task-group {
-  width: 80%;
-  max-width: 100%;
-  margin: 0 auto 1.5rem auto;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-/* === 📱 響應式調整（平板與手機） === */
+/* === 📱 第二頁響應式調整：左右變上下 === */
 @media (max-width: 1100px) {
   #ganttContainer {
     flex-direction: column !important;
@@ -682,71 +677,75 @@ input[list] {
   .right-side,
   #taskManagerContainer {
     width: 100% !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    box-sizing: border-box;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  #fusionDropZone {
+    flex-direction: column;
+    align-items: stretch;
   }
 
   #fusionResult .task-group {
     width: 100% !important;
     max-width: 100% !important;
-    margin: 0 auto 1.5rem auto !important;
-    padding: 0 !important;
-  }
-
-  .filter-bar {
-    grid-template-columns: 1fr;
   }
 }
 
+#fusionResult .task-group {
+  width: 80%;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
 @media (max-width: 768px) {
-  .grid-layout {
-    grid-template-columns: 1fr;
-    grid-template-areas:
-      "title"
-      "category"
-      "taskname"
-      "start"
-      "end"
-      "endtotal"
-      "btn";
+  #fusionResult .task-group {
+    width: 100%;
   }
+}
 
-  .circle-btn {
-    width: 80px;
-    height: 80px;
-    font-size: 0.9rem;
-  }
-.task-group {
-    width: 92% !important;             /* 比原本 80% 更寬一些 */
-    max-width: 100% !important;
-    margin: 0 auto 2rem auto !important;  /* 上下間距 + 中央置中 */
-    padding: 1.5rem 1.2rem !important;
-    border-radius: 18px;
-    box-shadow: 0 0 16px #00f8f1a0;
-  }
+/* === 🌌 Global Style：整體樣式與基礎字型 === */
+#fusionPageContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  /* ← 保持起點對齊 */
+  max-width: 1600px;
+  margin: auto;
+  padding: 2rem;
+  gap: 2rem;
+  box-sizing: border-box;
+}
 
-  .group-header {
-    font-size: 1.1rem;
-    padding: 0.7rem 1.2rem;
-    border-radius: 999px;
-  }
+.left-panel {
+  width: 45%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-height: 100%;
+  box-sizing: border-box;
+}
 
-  .task-bar {
-    font-size: 0.9rem;
-    height: auto;
-    padding: 0.6rem;
-    margin-bottom: 0.7rem;
-  }
+.right-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
 
-  .timeline-wrapper {
-    margin-bottom: 1.5rem;
-  }
+.left-side {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding-right: 1rem;
+  overflow-y: auto;
+}
 
-  .little-man {
-    width: 36px;
-    height: 36px;
-  }
+.right-side {
+  width: 50%;
+  overflow-y: auto;
+  padding-left: 1rem;
 }
 
 #taskManagerContainer {
@@ -1062,41 +1061,3 @@ input[list] {
   transform: translateY(-2px);
   box-shadow: 0 0 12px #fff0f5, 0 0 20px #ff80c0;
 }
-
-@media (max-width: 768px) {
-  #fusionResult {
-    padding: 1rem !important;
-  }
-
-  #fusionResult .task-group {
-    width: 92% !important;
-    max-width: 100% !important;
-    margin: 0 auto 2rem auto !important;
-    padding: 1.5rem 1.2rem !important;
-    border-radius: 16px;
-    box-shadow: 0 0 16px #00f8f1a0;
-    box-sizing: border-box;
-  }
-
-  .group-header {
-    font-size: 1.1rem !important;
-    padding: 0.6rem 1rem !important;
-    margin-bottom: 1rem !important;
-  }
-
-  .timeline-wrapper {
-    margin-bottom: 1.5rem !important;
-  }
-
-  .task-bar {
-    font-size: 0.9rem !important;
-    padding: 0.6rem !important;
-    margin-bottom: 0.8rem !important;
-  }
-
-  .little-man {
-    width: 36px !important;
-    height: 36px !important;
-  }
-}
-
