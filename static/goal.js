@@ -9,7 +9,7 @@ function parseDate(str) {
         const [y, m, d] = parts.map(Number);
         return new Date(y, m - 1, d);
     }
-    return new Date(NaN); // 轉換失敗時明確 NaN
+    return new Date(NaN);
 }
 
 function formatDate(date) {
@@ -19,21 +19,21 @@ function formatDate(date) {
 }
 
 function getOffsetDays(start, date) {
-  const msPerDay = 1000 * 60 * 60 * 24;
-  return Math.floor((date - start) / msPerDay);
+    const msPerDay = 1000 * 60 * 60 * 24;
+    return Math.floor((date - start) / msPerDay);
 }
 
 function getDurationDays(start, end) {
-  const msPerDay = 1000 * 60 * 60 * 24;
-  return Math.floor((end - start) / msPerDay) + 1;
+    const msPerDay = 1000 * 60 * 60 * 24;
+    return Math.floor((end - start) / msPerDay) + 1;
 }
 
 function todayPosition(start, end) {
-  const now = new Date();
-  now.setHours(0, 0, 0, 0);
-  const total = getDurationDays(start, end);
-  const passed = getOffsetDays(start, now);
-  return Math.min(100, Math.max(0, (passed / total) * 100));
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+    const total = getOffsetDays(start, end) + 1;
+    const passed = getOffsetDays(start, now);
+    return Math.min(100, Math.max(0, (passed / total) * 100));
 }
 
 // ===========================
@@ -77,7 +77,7 @@ function getProjectColor(name) {
 }
 
 // ===========================
-// 🧙 融合卡片顯示邏輯（依樣畫葫蘁）
+// 🧙 融合卡片顯示邏輯
 // ===========================
 function renderMergedGroup(groupKey, groupData) {
     const group = document.createElement('div');
@@ -124,6 +124,9 @@ function renderMergedGroup(groupKey, groupData) {
     const start = new Date(Math.min(...startDates));
     const end = new Date(Math.max(...projectEndDates));
     const now = new Date();
+    now.setHours(0, 0, 0, 0);
+
+    const total = getOffsetDays(start, end) + 1;
 
     const timeline = document.createElement('div');
     timeline.className = 'timeline-wrapper';
@@ -160,8 +163,7 @@ function renderMergedGroup(groupKey, groupData) {
         const taskStart = parseDate(t['開始日期']);
         const taskEnd = parseDate(t['結束日期']);
         const offset = getOffsetDays(start, taskStart);
-        const duration = getDurationDays(taskStart, taskEnd);
-        const total = getDurationDays(start, end);
+        const duration = getOffsetDays(taskStart, taskEnd) + 1;
 
         bar.style.marginLeft = `${(offset / total) * 100}%`;
         bar.style.width = `${(duration / total) * 100}%`;
@@ -207,7 +209,7 @@ function fetchTasksAndInit() {
 }
 
 // ===========================
-// 🌟 拖曳融合操作設定
+// ✨ 拖曳融合操作設定
 // ===========================
 function setupDragAndFusion() {
     const dropZone = document.getElementById("fusionDropZone");
