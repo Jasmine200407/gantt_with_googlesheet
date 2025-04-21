@@ -200,9 +200,10 @@ function renderMergedGroup(groupKey, groupData) {
             legendItem.innerHTML = `<span class="legend-color" style="background:${color}"></span>${projectName}`;
             legend.appendChild(legendItem);
         }
-
-        barWrapper.appendChild(bar);
-        group.appendChild(barWrapper);
+    const timelineLine = timeline.querySelector('.timeline-line');
+    barWrapper.appendChild(bar);
+    timelineLine.appendChild(barWrapper);
+       
     });
 
     group.appendChild(legend);
