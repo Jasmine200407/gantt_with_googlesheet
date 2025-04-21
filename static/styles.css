@@ -637,161 +637,54 @@ input[list] {
 
 /* === 🧩 書櫃式融合卡片系統（新增功能樣式） === */
 
-/* === 📱 第二頁響應式調整：左右變上下 === */
-/* /* === 📱 響應式調整：1100px 以下 === */
-@media (max-width: 1100px) {
-  #ganttContainer {
-    flex-direction: column !important;
-  }
-
-  .left-side,
-  .right-side,
-  #taskManagerContainer {
-    width: 100% !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
-
-  #fusionDropZone {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  #fusionResult .task-group {
-    width: 100% !important;
-    max-width: 100% !important;
-  }
-
-  .filter-bar {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* === 預設寬度設定（大於 1100px） === */
-#fusionResult .task-group {
-  width: 80%;
-  max-width: 100%;
-  margin: 0 auto;
-}
-
-/* === 📱 響應式調整：768px 以下 === */
-@media (max-width: 768px) {
-  #fusionResult .task-group {
-    width: 100%;
-  }
-
-  .grid-layout {
-    grid-template-columns: 1fr;
-    grid-template-areas:
-      "title"
-      "category"
-      "taskname"
-      "start"
-      "end"
-      "endtotal"
-      "btn";
-  }
-
-  .circle-btn {
-    width: 80px;
-    height: 80px;
-    font-size: 0.9rem;
-  }
-} */
-
-/* === 📱 響應式調整：1100px 以下 === */
-@media (max-width: 1100px) {
-  #ganttContainer {
-    flex-direction: column !important;
-  }
-
-  .left-side,
-  .right-side,
-  #taskManagerContainer,
-  #fusionResult {
-    width: 100% !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    box-sizing: border-box;
-  }
-
-  #fusionDropZone {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  #fusionResult .task-group {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    box-sizing: border-box;
-  }
-
-  .filter-bar {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* === 預設寬度設定（大於 1100px） === */
-#fusionResult .task-group {
-  width: 80%;
-  max-width: 100%;
-  margin: 0 auto;
-  box-sizing: border-box;
-}
-/* === 💻 桌面預設寬度設定（大於 1100px） === */
-#fusionResult {
+/* === 🧱 基本結構佈局 === */
+#ganttContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
   width: 100%;
   box-sizing: border-box;
+  flex-wrap: wrap;
 }
 
-#fusionResult .task-group {
-  width: 80%;
-  max-width: 100%;
-  margin: 0 auto;
-  padding: 0;
+.left-side,
+.right-side {
+  flex: 1;
   box-sizing: border-box;
 }
 
-
-/* === 📱 響應式調整：1100px 以下（平板～小筆電） === */
-@media (max-width: 1100px) {
-  #ganttContainer {
-    flex-direction: column !important;
-  }
-
+/* === 🖥️ 桌面寬度（大於 1100px）左右並排 === */
+@media (min-width: 1101px) {
   .left-side,
-  .right-side,
-  #taskManagerContainer,
-  #fusionResult {
-    width: 100% !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    box-sizing: border-box;
-  }
-
-  #fusionDropZone {
-    flex-direction: column;
-    align-items: stretch;
+  .right-side {
+    width: 50%;
+    padding: 1rem;
   }
 
   #fusionResult .task-group {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
+    width: 80%;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0;
     box-sizing: border-box;
-  }
-
-  .filter-bar {
-    grid-template-columns: 1fr;
   }
 }
 
 
-/* === 📱 響應式調整：768px 以下（手機） === */
-@media (max-width: 768px) {
+/* === 💻 平板寬度（768px～1100px）：左右改為上下 === */
+@media (max-width: 1100px) {
+  #ganttContainer {
+    flex-direction: column;
+  }
+
+  .left-side,
+  .right-side {
+    width: 100% !important;
+    padding: 0 !important;
+  }
+
   #fusionResult,
   #fusionResult .task-group {
     width: 100% !important;
@@ -801,6 +694,18 @@ input[list] {
     box-sizing: border-box;
   }
 
+  .filter-bar {
+    grid-template-columns: 1fr;
+  }
+
+  .right-side:empty {
+    display: none !important;
+  }
+}
+
+
+/* === 📱 手機寬度（小於 768px）：卡片全展開 === */
+@media (max-width: 768px) {
   .grid-layout {
     grid-template-columns: 1fr;
     grid-template-areas:
@@ -818,52 +723,20 @@ input[list] {
     height: 80px;
     font-size: 0.9rem;
   }
+
+  #fusionResult,
+  #fusionResult .task-group {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box;
+  }
+
+  .task-group {
+    margin-bottom: 1.5rem;
+  }
 }
 
-
-/* === 🌌 Global Style：整體樣式與基礎字型 === */
-#fusionPageContainer {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  /* ← 保持起點對齊 */
-  max-width: 1600px;
-  margin: auto;
-  padding: 2rem;
-  gap: 2rem;
-  box-sizing: border-box;
-}
-
-.left-panel {
-  width: 45%;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  max-height: 100%;
-  box-sizing: border-box;
-}
-
-.right-panel {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.left-side {
-  width: 50%;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  padding-right: 1rem;
-  overflow-y: auto;
-}
-
-.right-side {
-  width: 50%;
-  overflow-y: auto;
-  padding-left: 1rem;
-}
 
 #taskManagerContainer {
   width: 50%;
