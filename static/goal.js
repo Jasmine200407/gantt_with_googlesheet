@@ -82,62 +82,30 @@ function getProjectColor(name) {
 // ===========================
 // 🧙 融合卡片顯示邏輯
 // ===========================
-function renderMergedGroup(groupKey, groupData) {
+function renderGroup(groupKey, groupData) {
     const group = document.createElement('div');
     group.className = 'task-group';
     group.setAttribute('data-group', groupKey);
-    group.style.cursor = 'move';
-    group.style.marginTop = '2rem';
 
     const header = document.createElement('div');
     header.className = 'group-header';
     header.textContent = groupKey;
     group.appendChild(header);
 
-    const deleteBtn = document.createElement('button');
-    deleteBtn.textContent = '刪除卡片';
-    deleteBtn.className = 'delete-fusion-btn';
-    deleteBtn.title = '刪除此融合卡片';
-    deleteBtn.addEventListener('click', () => {
-        group.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
-        group.style.opacity = '0';
-        group.style.transform = 'scale(0.9)';
-        setTimeout(() => group.remove(), 400);
-    });
-    group.appendChild(deleteBtn);
-
-    const allTasks = groupData.tasks;
-    const startDates = allTasks.map(t => parseDate(t['開始日期'])).filter(d => !isNaN(d));
-    const projectEndDates = allTasks.map(t => parseDate(t['專案截止日期'])).filter(d => !isNaN(d));
-
-    const invalid = allTasks.filter(t =>
-        isNaN(parseDate(t['開始日期'])) || isNaN(parseDate(t['專案截止日期']))
-    );
-    if (invalid.length > 0) {
-        console.warn("❌ 以下任務的日期欄位格式錯誤：", invalid);
-        alert("有任務日期格式錯誤，請打開 Console 查看詳情！");
-        return;
-    }
-
-    if (startDates.length === 0 || projectEndDates.length === 0) {
-        alert("融合卡片失敗：日期欄位錯誤或遺失");
-        return;
-    }
-
-    const start = new Date(Math.min(...startDates));
-    const end = new Date(Math.max(...projectEndDates));
+    const start = groupData.start;
+    const end = groupData.end;
+    start.setHours(0, 0, 0, 0);
+    end.setHours(0, 0, 0, 0);
     const now = new Date();
     now.setHours(0, 0, 0, 0);
-
     const total = getOffsetDays(start, end) + 1;
 
-    // === 📅 時間軸區塊 ===
     const timeline = document.createElement('div');
     timeline.className = 'timeline-wrapper';
     timeline.innerHTML = `
-      <div class="timeline-label start">${formatDate(start)}</div>
+      <div class="timeline-label start">${groupData.startText}</div>
       <div class="timeline-line"></div>
-      <div class="timeline-label end">${formatDate(end)}</div>
+      <div class="timeline-label end">${groupData.endText}</div>
     `;
 
     const littleMan = document.createElement('div');
@@ -147,12 +115,7 @@ function renderMergedGroup(groupKey, groupData) {
     timeline.appendChild(littleMan);
     group.appendChild(timeline);
 
-    const colorMap = {};
-    const legend = document.createElement("div");
-    legend.className = "legend-area";
-
-    // 🔃 任務排序（結束日越近的排上面）
-    const sortedTasks = [...allTasks].filter(t => parseDate(t['結束日期']) > now).sort((a, b) => {
+    const sortedTasks = [...groupData.tasks].filter(t => parseDate(t['結束日期']) > now).sort((a, b) => {
         const daysA = getOffsetDays(now, parseDate(a['結束日期']));
         const daysB = getOffsetDays(now, parseDate(b['結束日期']));
         return daysA - daysB;
@@ -161,53 +124,33 @@ function renderMergedGroup(groupKey, groupData) {
     sortedTasks.forEach(t => {
         const taskStart = parseDate(t['開始日期']);
         const taskEnd = parseDate(t['結束日期']);
-        if (isNaN(taskStart) || isNaN(taskEnd)) return;
+        taskStart.setHours(0, 0, 0, 0);
+        taskEnd.setHours(0, 0, 0, 0);
 
-        // 計算時間軸百分比
-        const progressStart = getOffsetDays(start, taskStart) / total;
-        const progressEnd = getOffsetDays(start, taskEnd) / total;
-        const barStart = Math.max(0, progressStart * 100);
-        const barWidth = Math.max(0, (progressEnd - progressStart) * 100);
+        const offset = getOffsetDays(start, taskStart);
+        const duration = getOffsetDays(taskStart, taskEnd) + 1;
 
-        // === 🧱 外層容器
-        const barWrapper = document.createElement('div');
-        barWrapper.className = 'task-bar-wrapper';
-        barWrapper.style.position = 'relative';
-        barWrapper.style.height = '30px'; // 或自訂
+        const wrapper = document.createElement('div');
+        wrapper.className = 'task-bar-wrapper';
+        wrapper.style.position = 'relative';
 
-        // === 📊 任務條
         const bar = document.createElement('div');
         bar.className = 'task-bar';
         bar.style.position = 'absolute';
-        bar.style.left = `${barStart}%`;
-        bar.style.width = `${barWidth}%`;
-        bar.style.top = '0';
+        bar.style.left = `${(offset / total) * 100}%`;
+        bar.style.width = `${(duration / total) * 100}%`;
+        bar.style.transform = 'translateX(-50%)';
 
         const remainingDays = getOffsetDays(now, taskEnd);
-        const projectName = t['專案名稱'];
         bar.innerHTML = `<img src='/static/clock.png' style='width:16px;height:16px;margin-right:4px;'>${remainingDays}天`;
-        bar.setAttribute('data-subtask', `${projectName} - ${t['任務名稱']}`);
-        bar.title = `開始：${t['開始日期']}\n結束：${t['結束日期']}`;
+        bar.setAttribute('data-subtask', t['任務名稱']);
+        bar.title = `${t['任務名稱']}\n${t['開始日期']} - ${t['結束日期']}`;
 
-        const color = getProjectColor(projectName);
-        bar.style.background = color;
-        bar.style.boxShadow = `0 0 6px ${color}`;
-
-        if (!colorMap[projectName]) {
-            colorMap[projectName] = color;
-            const legendItem = document.createElement("div");
-            legendItem.className = "legend-item";
-            legendItem.innerHTML = `<span class="legend-color" style="background:${color}"></span>${projectName}`;
-            legend.appendChild(legendItem);
-        }
-    const timelineLine = timeline.querySelector('.timeline-line');
-    barWrapper.appendChild(bar);
-    timelineLine.appendChild(barWrapper);
-       
+        wrapper.appendChild(bar);
+        group.appendChild(wrapper);
     });
 
-    group.appendChild(legend);
-    document.getElementById('fusionResult').appendChild(group);
+    document.getElementById('taskGroups').appendChild(group);
 }
 
 // ===========================
