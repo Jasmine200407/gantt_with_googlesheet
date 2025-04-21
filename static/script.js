@@ -29,15 +29,21 @@ function formatDate(date) {
     return `${m}/${d}`;
 }
 
-function getDaysBetween(start, end) {
-  return Math.floor((end - start) / (1000 * 60 * 60 * 24)) + 1;
+function getOffsetDays(start, date) {
+    const msPerDay = 1000 * 60 * 60 * 24;
+    return Math.floor((date - start) / msPerDay);
+}
+
+function getDurationDays(start, end) {
+    const msPerDay = 1000 * 60 * 60 * 24;
+    return Math.floor((end - start) / msPerDay) + 1;
 }
 
 function todayPosition(start, end) {
-    const total = getDaysBetween(start, end);
     const now = new Date();
-    now.setHours(0, 0, 0, 0); // ✅ 將 now 設為今日 00:00
-    const passed = getDaysBetween(start, now);
+    now.setHours(0, 0, 0, 0);
+    const total = getDurationDays(start, end);
+    const passed = getOffsetDays(start, now);
     return Math.min(100, Math.max(0, (passed / total) * 100));
 }
 
@@ -76,8 +82,8 @@ function renderTaskGroup(groupKey, groupData) {
     group.appendChild(timeline);
 
     const sortedTasks = [...groupData.tasks].sort((a, b) => {
-        const daysA = getDaysBetween(now, parseDate(a['結束日期']));
-        const daysB = getDaysBetween(now, parseDate(b['結束日期']));
+        const daysA = getDurationDays(now, parseDate(a['結束日期']));
+        const daysB = getDurationDays(now, parseDate(b['結束日期']));
         return daysA - daysB;
     });
 
@@ -86,14 +92,13 @@ function renderTaskGroup(groupKey, groupData) {
 
         const bar = document.createElement('div');
         bar.className = 'task-bar';
-        const offset = getDaysBetween(start, parseDate(t['開始日期']));
-        const duration = getDaysBetween(parseDate(t['開始日期']), parseDate(t['結束日期']));
-        const total = getDaysBetween(start, end);
+        const offset = getOffsetDays(start, parseDate(t['開始日期']));
+        const duration = getDurationDays(parseDate(t['開始日期']), parseDate(t['結束日期']));
+        const total = getDurationDays(start, end);
         bar.style.marginLeft = `${(offset / total) * 100}%`;
         bar.style.width = `${(duration / total) * 100}%`;
-        const remainingDays = getDaysBetween(now, parseDate(t['結束日期']));
+        const remainingDays = getDurationDays(now, parseDate(t['結束日期']));
         bar.innerHTML = `<img src='/static/clock.png' style='width:16px;height:16px;margin-right:4px;'>${remainingDays}天`;
-        bar.title = `開始：${t['開始日期']}\n結束：${t['結束日期']}`;
         bar.setAttribute('data-subtask', t['任務名稱']);
         group.appendChild(bar);
     });
@@ -127,7 +132,7 @@ function renderTable(tasks) {
   </td>
   <td>${t['開始日期']}</td>
   <td>${t['結束日期']}</td>
-  <td>${getDaysBetween(now, endDate)} 天</td>
+  <td>${getDurationDays(now, endDate)} 天</td>
   <td class="memo-cell" title="${memo}">${memoHtml}</td>
   <td><input type="checkbox" data-subtask="${t['任務名稱']}"></td>
 `;
