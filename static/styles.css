@@ -1062,3 +1062,41 @@ input[list] {
   transform: translateY(-2px);
   box-shadow: 0 0 12px #fff0f5, 0 0 20px #ff80c0;
 }
+
+@media (max-width: 768px) {
+  #fusionResult {
+    padding: 1rem !important;
+  }
+
+  #fusionResult .task-group {
+    width: 92% !important;
+    max-width: 100% !important;
+    margin: 0 auto 2rem auto !important;
+    padding: 1.5rem 1.2rem !important;
+    border-radius: 16px;
+    box-shadow: 0 0 16px #00f8f1a0;
+    box-sizing: border-box;
+  }
+
+  .group-header {
+    font-size: 1.1rem !important;
+    padding: 0.6rem 1rem !important;
+    margin-bottom: 1rem !important;
+  }
+
+  .timeline-wrapper {
+    margin-bottom: 1.5rem !important;
+  }
+
+  .task-bar {
+    font-size: 0.9rem !important;
+    padding: 0.6rem !important;
+    margin-bottom: 0.8rem !important;
+  }
+
+  .little-man {
+    width: 36px !important;
+    height: 36px !important;
+  }
+}
+
