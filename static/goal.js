@@ -25,9 +25,11 @@ function getDaysBetween(start, end) {
 function todayPosition(start, end) {
     const total = getDaysBetween(start, end);
     const now = new Date();
+    now.setHours(0, 0, 0, 0); // ✅ 將 now 設為今日 00:00
     const passed = getDaysBetween(start, now);
     return Math.min(100, Math.max(0, (passed / total) * 100));
 }
+
 
 // ===========================
 // 📦 書櫃卡片產生器
@@ -113,6 +115,7 @@ function renderMergedGroup(groupKey, groupData) {
         alert("融合卡片失敗：日期欄位錯誤或遺失");
         return;
     }
+    console.log("🧱 任務：", t['專案名稱'], t['任務名稱'], "開始：", t['開始日期'], "解析後：", parseDate(t['開始日期']), "→ offset 天數：", getDaysBetween(start, parseDate(t['開始日期'])));
 
     const start = new Date(Math.min(...startDates));
     const end = new Date(Math.max(...projectEndDates));
