@@ -717,9 +717,35 @@ input[list] {
     height: 80px;
     font-size: 0.9rem;
   }
+.task-group {
+    width: 92% !important;             /* 比原本 80% 更寬一些 */
+    max-width: 100% !important;
+    margin: 0 auto 2rem auto !important;  /* 上下間距 + 中央置中 */
+    padding: 1.5rem 1.2rem !important;
+    border-radius: 18px;
+    box-shadow: 0 0 16px #00f8f1a0;
+  }
 
-  .task-group {
+  .group-header {
+    font-size: 1.1rem;
+    padding: 0.7rem 1.2rem;
+    border-radius: 999px;
+  }
+
+  .task-bar {
+    font-size: 0.9rem;
+    height: auto;
+    padding: 0.6rem;
+    margin-bottom: 0.7rem;
+  }
+
+  .timeline-wrapper {
     margin-bottom: 1.5rem;
+  }
+
+  .little-man {
+    width: 36px;
+    height: 36px;
   }
 }
 
