@@ -44,10 +44,12 @@ function todayPosition(start, end) {
     now.setHours(0, 0, 0, 0);
     start.setHours(0, 0, 0, 0);
     end.setHours(0, 0, 0, 0);
-    const totalMs = end - start + 86400000;
-    const passedMs = now - start;
-    return Math.min(100, Math.max(0, (passedMs / totalMs) * 100));
+
+    const totalDays = getOffsetDays(start, end) + 1;
+    const passedDays = getOffsetDays(start, now);
+    return Math.min(100, Math.max(0, (passedDays / totalDays) * 100));
 }
+
 
 // ============================
 // 📅 flatpickr 初始化
@@ -81,9 +83,9 @@ function renderTaskGroup(groupKey, groupData) {
       <div class="timeline-label end">${groupData.endText}</div>
     `;
     
-   const littleMan = document.createElement('div');
+    const littleMan = document.createElement('div');
     littleMan.className = 'little-man';
-    littleMan.style.left = `${todayPosition(start, end)}%`;
+    littleMan.style.left = `${todayPositionByDays(start, end)}%`;
     littleMan.style.transform = 'translateX(-50%)';
     group.appendChild(timeline);
     timeline.appendChild(littleMan);
