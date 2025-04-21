@@ -100,8 +100,8 @@ function renderTaskGroup(groupKey, groupData) {
     littleMan.className = 'little-man';
     littleMan.style.left = `${todayPosition(start, end)}%`;
     littleMan.style.transform = 'translateX(-50%)';
-    group.appendChild(timeline);
     timeline.appendChild(littleMan);
+    group.appendChild(timeline);
 
     const sortedTasks = [...groupData.tasks].sort((a, b) => {
         const daysA = getDurationDays(now, parseDate(a['結束日期']));
