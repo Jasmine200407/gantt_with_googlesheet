@@ -86,12 +86,28 @@ function renderMergedGroup(groupKey, groupData) {
     const group = document.createElement('div');
     group.className = 'task-group';
     group.setAttribute('data-group', groupKey);
+    group.style.cursor = 'move';
+    group.style.marginTop = '2rem';
 
+    // 👉 標題與刪除按鈕
     const header = document.createElement('div');
     header.className = 'group-header';
     header.textContent = groupKey;
     group.appendChild(header);
 
+    const deleteBtn = document.createElement('button');
+    deleteBtn.textContent = '刪除卡片';
+    deleteBtn.className = 'delete-fusion-btn';
+    deleteBtn.title = '刪除此融合卡片';
+    deleteBtn.addEventListener('click', () => {
+        group.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+        group.style.opacity = '0';
+        group.style.transform = 'scale(0.9)';
+        setTimeout(() => group.remove(), 400);
+    });
+    group.appendChild(deleteBtn);
+
+    // 👉 時間軸
     const start = groupData.start;
     const end = groupData.end;
     start.setHours(0, 0, 0, 0);
@@ -115,11 +131,18 @@ function renderMergedGroup(groupKey, groupData) {
     timeline.appendChild(littleMan);
     group.appendChild(timeline);
 
-    const sortedTasks = [...groupData.tasks].filter(t => parseDate(t['結束日期']) > now).sort((a, b) => {
-        const daysA = getOffsetDays(now, parseDate(a['結束日期']));
-        const daysB = getOffsetDays(now, parseDate(b['結束日期']));
-        return daysA - daysB;
-    });
+    // 👉 顏色與圖例
+    const colorMap = {};
+    const legend = document.createElement("div");
+    legend.className = "legend-area";
+
+    const sortedTasks = [...groupData.tasks]
+        .filter(t => parseDate(t['結束日期']) > now)
+        .sort((a, b) => {
+            const daysA = getOffsetDays(now, parseDate(a['結束日期']));
+            const daysB = getOffsetDays(now, parseDate(b['結束日期']));
+            return daysA - daysB;
+        });
 
     sortedTasks.forEach(t => {
         const taskStart = parseDate(t['開始日期']);
@@ -142,16 +165,33 @@ function renderMergedGroup(groupKey, groupData) {
         bar.style.transform = 'translateX(-50%)';
 
         const remainingDays = getOffsetDays(now, taskEnd);
+        const projectName = t['專案名稱'];
+        const taskName = t['任務名稱'];
         bar.innerHTML = `<img src='/static/clock.png' style='width:16px;height:16px;margin-right:4px;'>${remainingDays}天`;
-        bar.setAttribute('data-subtask', t['任務名稱']);
-        bar.title = `${t['任務名稱']}\n${t['開始日期']} - ${t['結束日期']}`;
+        bar.setAttribute('data-subtask', `${projectName} - ${taskName}`);
+        bar.title = `開始：${t['開始日期']}\n結束：${t['結束日期']}`;
+
+        // 顏色套用
+        const color = getProjectColor(projectName);
+        bar.style.background = color;
+        bar.style.boxShadow = `0 0 6px ${color}`;
+
+        if (!colorMap[projectName]) {
+            colorMap[projectName] = color;
+            const legendItem = document.createElement("div");
+            legendItem.className = "legend-item";
+            legendItem.innerHTML = `<span class="legend-color" style="background:${color}"></span>${projectName}`;
+            legend.appendChild(legendItem);
+        }
 
         wrapper.appendChild(bar);
         group.appendChild(wrapper);
     });
 
-    document.getElementById('taskGroups').appendChild(group);
+    group.appendChild(legend);
+    document.getElementById('fusionResult').appendChild(group);
 }
+
 // ===========================
 // 🗕️ 抓取資料並顯示書櫃卡片
 // ===========================
