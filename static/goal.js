@@ -105,10 +105,10 @@ function renderMergedGroup(groupKey, groupData) {
 
     const allTasks = groupData.tasks;
     const startDates = allTasks.map(t => parseDate(t['開始日期'])).filter(d => !isNaN(d));
-    const projectEndDates = allTasks.map(t => parseDate(t['結束日期'])).filter(d => !isNaN(d));
+    const projectEndDates = allTasks.map(t => parseDate(t['專案截止日期'])).filter(d => !isNaN(d));
 
     const invalid = allTasks.filter(t =>
-        isNaN(parseDate(t['開始日期'])) || isNaN(parseDate(t['結束日期']))
+        isNaN(parseDate(t['開始日期'])) || isNaN(parseDate(t['專案截止日期']))
     );
     if (invalid.length > 0) {
         console.warn("❌ 以下任務的日期欄位格式錯誤：", invalid);
