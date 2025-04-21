@@ -2,40 +2,78 @@
 <html lang="zh-TW">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gantt-chart Kitchen</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gantt-chart Kitchen</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
 </head>
 
 <body>
-    <!-- 🔙 回首頁按鈕 -->
-    <a href="{{ url_for('home') }}" class="back-btn">回首頁</a>
+  <!-- 🔙 回首頁按鈕 -->
+  <a href="{{ url_for('home') }}" class="back-btn">回首頁</a>
 
-    <main id="ganttContainer">
-        <!-- 左側：書櫃區與控制區 -->
-        <div id="taskManagerContainer">
-            <div id="cardShelf"></div>
-            <div class="card-section">
-                <div class="card-header">請拖入要合併的專案類別</div>
-                <div id="fusionDropZone"></div>
-                <div class="fusion-controls">
-                    <input type="text" class="fusion-input" placeholder="輸入合併後的卡片名稱" id="fusionName">
-                    <button class="circle-btn" id="createFusion">合併專案卡片</button>
-                    <button class="circle-btn" id="selectAllFusion">專案全選</button>
-                    <button class="circle-btn" id="clearFusion">清空選擇</button>
+  <main id="ganttContainer">
+    <!-- 左側：書櫃區與控制區 -->
+    <div id="taskManagerContainer">
+      <div id="cardShelf"></div>
+
+      <div class="card-section">
+        <div class="card-header">請拖入要合併的專案類別</div>
+        <div id="fusionDropZone"></div>
+
+        <div class="fusion-controls">
+          <input type="text" class="fusion-input" placeholder="輸入合併後的卡片名稱" id="fusionName">
+          <button class="circle-btn" id="createFusion">合併專案卡片</button>
+          <button class="circle-btn" id="selectAllFusion">專案全選</button>
+          <button class="circle-btn" id="clearFusion">清空選擇</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 右側：融合任務結果 -->
+    <div class="right-side">
+      <section id="fusionResult" class="left-panel">
+        <!-- ✅ 範例卡片（由 JS 自動產生，範本參考用） -->
+        <!--
+        <div class="task-group" data-group="融合卡片A">
+          <div class="group-header">融合卡片A</div>
+
+          <div class="timeline-wrapper">
+            <div class="timeline-label start">04/14</div>
+            <div class="timeline-line">
+              <div class="little-man" style="left: 30%"></div>
+
+              <div class="task-bar-wrapper">
+                <div class="task-bar" style="left: 10%; width: 20%;" data-subtask="專案A - 子任務1">
+                  <img src='/static/clock.png' style='width:16px;height:16px;margin-right:4px;'>10天
                 </div>
+              </div>
+
+              <div class="task-bar-wrapper">
+                <div class="task-bar" style="left: 40%; width: 20%;" data-subtask="專案B - 子任務2">
+                  <img src='/static/clock.png' style='width:16px;height:16px;margin-right:4px;'>5天
+                </div>
+              </div>
             </div>
-        </div>
+            <div class="timeline-label end">05/20</div>
+          </div>
 
-        <!-- 右側：融合任務結果 -->
-        <div class="right-side">
-            <section id="fusionResult" class="left-panel"></section>
+          <div class="legend-area">
+            <div class="legend-item">
+              <span class="legend-color" style="background: #00f8f1;"></span> 專案A
+            </div>
+            <div class="legend-item">
+              <span class="legend-color" style="background: #ff00ff;"></span> 專案B
+            </div>
+          </div>
         </div>
-    </main>
+        -->
+      </section>
+    </div>
+  </main>
 
-    <script src="{{ url_for('static', filename='goal.js') }}"></script>
+  <script src="{{ url_for('static', filename='goal.js') }}"></script>
 </body>
 
 </html>
