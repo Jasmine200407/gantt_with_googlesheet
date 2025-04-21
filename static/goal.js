@@ -131,6 +131,7 @@ function renderMergedGroup(groupKey, groupData) {
 
     const total = getOffsetDays(start, end) + 1;
 
+    // === 📅 時間軸區塊 ===
     const timeline = document.createElement('div');
     timeline.className = 'timeline-wrapper';
     timeline.innerHTML = `
@@ -150,6 +151,7 @@ function renderMergedGroup(groupKey, groupData) {
     const legend = document.createElement("div");
     legend.className = "legend-area";
 
+    // 🔃 任務排序（結束日越近的排上面）
     const sortedTasks = [...allTasks].filter(t => parseDate(t['結束日期']) > now).sort((a, b) => {
         const daysA = getOffsetDays(now, parseDate(a['結束日期']));
         const daysB = getOffsetDays(now, parseDate(b['結束日期']));
@@ -157,20 +159,30 @@ function renderMergedGroup(groupKey, groupData) {
     });
 
     sortedTasks.forEach(t => {
-        const barWrapper = document.createElement('div');
-        barWrapper.className = 'task-bar-wrapper';
-
-        const bar = document.createElement('div');
-        bar.className = 'task-bar';
-
         const taskStart = parseDate(t['開始日期']);
         const taskEnd = parseDate(t['結束日期']);
-        const offset = getOffsetDays(start, taskStart);
-        const duration = getOffsetDays(taskStart, taskEnd) + 1;
-        bar.style.marginLeft = `${(offset / total) * 100}%`;
-        bar.style.width = `${(duration / total) * 100}%`;
+        if (isNaN(taskStart) || isNaN(taskEnd)) return;
 
-        
+        // 計算時間軸百分比
+        const progressStart = getOffsetDays(start, taskStart) / total;
+        const progressEnd = getOffsetDays(start, taskEnd) / total;
+        const barStart = Math.max(0, progressStart * 100);
+        const barWidth = Math.max(0, (progressEnd - progressStart) * 100);
+
+        // === 🧱 外層容器
+        const barWrapper = document.createElement('div');
+        barWrapper.className = 'task-bar-wrapper';
+        barWrapper.style.position = 'relative';
+        barWrapper.style.height = '30px'; // 或自訂
+
+        // === 📊 任務條
+        const bar = document.createElement('div');
+        bar.className = 'task-bar';
+        bar.style.position = 'absolute';
+        bar.style.left = `${barStart}%`;
+        bar.style.width = `${barWidth}%`;
+        bar.style.top = '0';
+
         const remainingDays = getOffsetDays(now, taskEnd);
         const projectName = t['專案名稱'];
         bar.innerHTML = `<img src='/static/clock.png' style='width:16px;height:16px;margin-right:4px;'>${remainingDays}天`;
@@ -195,20 +207,6 @@ function renderMergedGroup(groupKey, groupData) {
 
     group.appendChild(legend);
     document.getElementById('fusionResult').appendChild(group);
-}
-
-// ===========================
-// 🗕️ 抓取資料並顯示書櫃卡片
-// ===========================
-function fetchTasksAndInit() {
-    fetch(`${API_BASE}/tasks`)
-        .then(res => res.json())
-        .then(data => {
-            allTasks = data;
-            const shelf = document.getElementById("cardShelf");
-            const categories = [...new Set(data.map(t => t['專案名稱']))];
-            categories.forEach(cat => shelf.appendChild(createShelfCard(cat)));
-        });
 }
 
 // ===========================
