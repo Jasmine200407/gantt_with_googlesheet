@@ -93,6 +93,7 @@ function renderTaskGroup(groupKey, groupData) {
         bar.style.width = `${(duration / total) * 100}%`;
         const remainingDays = getDaysBetween(now, parseDate(t['結束日期']));
         bar.innerHTML = `<img src='/static/clock.png' style='width:16px;height:16px;margin-right:4px;'>${remainingDays}天`;
+        bar.title = `開始：${t['開始日期']}\n結束：${t['結束日期']}`;
         bar.setAttribute('data-subtask', t['任務名稱']);
         group.appendChild(bar);
     });
