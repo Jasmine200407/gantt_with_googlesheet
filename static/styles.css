@@ -655,41 +655,60 @@ input[list] {
   box-sizing: border-box;
 }
 
-/* === 🖥️ 桌面寬度（大於 1100px）左右並排 === */
-@media (min-width: 1101px) {
-  .left-side,
-  .right-side {
-    width: 50%;
-    padding: 1rem;
-  }
+/* === 🖥️ 預設：桌面左右並排 === */
+#ganttContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  gap: 1rem;
+  flex-wrap: wrap;
+  box-sizing: border-box;
+}
 
-  #fusionResult .task-group {
-    width: 80%;
-    max-width: 100%;
-    margin: 0 auto;
-    padding: 0;
-    box-sizing: border-box;
-  }
+.left-side,
+.right-side {
+  width: 50%;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+/* === 📦 卡片區樣式 === */
+#fusionResult {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#fusionResult .task-group {
+  width: 80%;
+  max-width: 100%;
+  margin: 0 auto 1.5rem auto;  /* 中間置中 + 下方間距 */
+  padding: 0;
+  box-sizing: border-box;
 }
 
 
-/* === 💻 平板寬度（768px～1100px）：左右改為上下 === */
+/* === 💻 平板以下（1100px 以下）：改為上下堆疊 === */
 @media (max-width: 1100px) {
   #ganttContainer {
     flex-direction: column;
+    width: 100%;
   }
 
   .left-side,
   .right-side {
     width: 100% !important;
     padding: 0 !important;
+    margin: 0 !important;
+    box-sizing: border-box;
   }
 
   #fusionResult,
   #fusionResult .task-group {
     width: 100% !important;
     max-width: 100% !important;
-    margin: 0 !important;
+    margin: 0 auto 1.5rem auto !important;
     padding: 0 !important;
     box-sizing: border-box;
   }
@@ -697,14 +716,10 @@ input[list] {
   .filter-bar {
     grid-template-columns: 1fr;
   }
-
-  .right-side:empty {
-    display: none !important;
-  }
 }
 
 
-/* === 📱 手機寬度（小於 768px）：卡片全展開 === */
+/* === 📱 手機顯示優化（768px 以下） === */
 @media (max-width: 768px) {
   .grid-layout {
     grid-template-columns: 1fr;
@@ -724,18 +739,11 @@ input[list] {
     font-size: 0.9rem;
   }
 
-  #fusionResult,
-  #fusionResult .task-group {
-    width: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    box-sizing: border-box;
-  }
-
   .task-group {
     margin-bottom: 1.5rem;
   }
 }
+
 
 
 #taskManagerContainer {
