@@ -688,56 +688,40 @@ input[list] {
   box-sizing: border-box;
 }
 
-/* === 📱 響應式調整 === */
 @media (max-width: 1100px) {
-    #ganttContainer {
-        flex-direction: column !important;
-    }
+  #ganttContainer {
+    flex-direction: column !important;
+  }
 
-    .left-side,
-    .right-side,
-    #taskManagerContainer {
-        width: 100% !important;
-        padding-left: 0 !important;
-        padding-right: 0 !important;
-    }
+  .left-side,
+  .right-side,
+  #taskManagerContainer {
+    width: 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
 
-    #fusionDropZone {
-        flex-direction: column;
-        align-items: stretch;
-    }
+  #fusionDropZone {
+    flex-direction: column;
+    align-items: stretch;
+  }
 
-    #fusionResult .task-group {
-        width: 100% !important;
-        max-width: 100% !important;
-    }
+  #fusionResult .task-group {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
 
-    .filter-bar {
-        grid-template-columns: 1fr;
-    }
+#fusionResult .task-group {
+  width: 80%;
+  max-width: 100%;
+  margin: 0 auto;
 }
 
 @media (max-width: 768px) {
-    #fusionResult .task-group {
-        width: 100%;
-    }
-    .grid-layout {
-        grid-template-columns: 1fr;
-        grid-template-areas:
-            "title"
-            "category"
-            "taskname"
-            "start"
-            "end"
-            "endtotal"
-            "btn";
-    }
-
-    .circle-btn {
-        width: 80px;
-        height: 80px;
-        font-size: 0.9rem;
-    }
+  #fusionResult .task-group {
+    width: 100%;
+  }
 }
 
 #taskManagerContainer {
