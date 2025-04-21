@@ -140,8 +140,8 @@ function renderMergedGroup(groupKey, groupData) {
     legend.className = "legend-area";
 
     const sortedTasks = [...allTasks].filter(t => parseDate(t['結束日期']) > now).sort((a, b) => {
-        const daysA = getDaysBetween(now, parseDate(a['結束日期']));
-        const daysB = getDaysBetween(now, parseDate(b['結束日期']));
+        const daysA = getOffsetDays(now, parseDate(a['結束日期']));
+        const daysB = getOffsetDays(now, parseDate(b['結束日期']));
         return daysA - daysB;
     });
 
@@ -154,11 +154,11 @@ function renderMergedGroup(groupKey, groupData) {
         const offset = getOffsetDays(start, taskStart);
         const duration = getDurationDays(taskStart, taskEnd);
         const total = getDurationDays(start, end);
-        console.log("🧱 任務：", t['專案名稱'], t['任務名稱'], "開始：", t['開始日期'], "解析後：", parseDate(t['開始日期']), "→ offset 天數：", getDaysBetween(start, parseDate(t['開始日期'])));
+
         bar.style.marginLeft = `${(offset / total) * 100}%`;
         bar.style.width = `${(duration / total) * 100}%`;
 
-        const remainingDays = getDaysBetween(now, taskEnd);
+        const remainingDays = getOffsetDays(now, taskEnd);
         const projectName = t['專案名稱'];
         bar.innerHTML = `<img src='/static/clock.png' style='width:16px;height:16px;margin-right:4px;'>${remainingDays}天`;
         bar.setAttribute('data-subtask', `${projectName} - ${t['任務名稱']}`);
@@ -224,7 +224,6 @@ function setupDragAndFusion() {
             }
         });
     });
-
 
     document.getElementById("createFusion").addEventListener("click", () => {
         const fusionName = document.getElementById("fusionName").value.trim();
