@@ -110,8 +110,6 @@ function renderMergedGroup(groupKey, groupData) {
     // 👉 時間軸
     const start = groupData.start;
     const end = groupData.end;
-    start.setHours(0, 0, 0, 0);
-    end.setHours(0, 0, 0, 0);
     const now = new Date();
     now.setHours(0, 0, 0, 0);
     const total = getOffsetDays(start, end) + 1;
