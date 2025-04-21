@@ -141,7 +141,7 @@ function renderMergedGroup(groupKey, groupData) {
 
     const littleMan = document.createElement('div');
     littleMan.className = 'little-man';
-    littleMan.style.left = `${todayPositionByDays(start, end)}%`;
+    littleMan.style.left = `${todayPosition(start, end)}%`;
     littleMan.style.transform = 'translateX(-50%)';
     timeline.appendChild(littleMan);
 
