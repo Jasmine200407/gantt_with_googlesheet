@@ -82,7 +82,7 @@ function getProjectColor(name) {
 // ===========================
 // 🧙 融合卡片顯示邏輯
 // ===========================
-function renderGroup(groupKey, groupData) {
+function renderMergedGroup(groupKey, groupData) {
     const group = document.createElement('div');
     group.className = 'task-group';
     group.setAttribute('data-group', groupKey);
