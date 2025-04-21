@@ -31,10 +31,11 @@ function getDurationDays(start, end) {
 function todayPosition(start, end) {
     const now = new Date();
     now.setHours(0, 0, 0, 0);
-    const total = getOffsetDays(start, end) + 1;
-    const passed = getOffsetDays(start, now);
-    return Math.min(100, Math.max(0, (passed / total) * 100));
+    const totalMs = end - start + 86400000;
+    const passedMs = now - start;
+    return Math.min(100, Math.max(0, (passedMs / totalMs) * 100));
 }
+
 
 // ===========================
 // 📦 書櫃卡片產生器
@@ -139,6 +140,7 @@ function renderMergedGroup(groupKey, groupData) {
     const littleMan = document.createElement('div');
     littleMan.className = 'little-man';
     littleMan.style.left = `${todayPosition(start, end)}%`;
+    littleMan.style.transform = 'translateX(-50%)';
     timeline.appendChild(littleMan);
 
     group.appendChild(timeline);
