@@ -9,7 +9,7 @@ function parseDate(str) {
         const [y, m, d] = parts.map(Number);
         return new Date(y, m - 1, d);
     }
-    return new Date(NaN);
+    return new Date(NaN); // 轉換失敗時明確 NaN
 }
 
 function formatDate(date) {
@@ -18,25 +18,15 @@ function formatDate(date) {
     return `${m}/${d}`;
 }
 
-function getOffsetDays(start, date) {
-    const msPerDay = 1000 * 60 * 60 * 24;
-    return Math.floor((date - start) / msPerDay);
-}
-
-function getDurationDays(start, end) {
-    const msPerDay = 1000 * 60 * 60 * 24;
-    return Math.floor((end - start) / msPerDay) + 1;
+function getDaysBetween(start, end) {
+    return Math.round((end - start) / (1000 * 60 * 60 * 24));
 }
 
 function todayPosition(start, end) {
+    const total = getDaysBetween(start, end);
     const now = new Date();
-    now.setHours(0, 0, 0, 0);
-    start.setHours(0, 0, 0, 0);
-    end.setHours(0, 0, 0, 0);
-
-    const totalDays = getOffsetDays(start, end) + 1;
-    const passedDays = getOffsetDays(start, now);
-    return Math.min(100, Math.max(0, (passedDays / totalDays) * 100));
+    const passed = getDaysBetween(start, now);
+    return Math.min(100, Math.max(0, (passed / total) * 100));
 }
 
 // ===========================
@@ -80,7 +70,7 @@ function getProjectColor(name) {
 }
 
 // ===========================
-// 🧙 融合卡片顯示邏輯
+// 🧙 融合卡片顯示邏輯（依樣畫葫蘁）
 // ===========================
 function renderMergedGroup(groupKey, groupData) {
     const group = document.createElement('div');
@@ -89,7 +79,6 @@ function renderMergedGroup(groupKey, groupData) {
     group.style.cursor = 'move';
     group.style.marginTop = '2rem';
 
-    // 👉 標題與刪除按鈕
     const header = document.createElement('div');
     header.className = 'group-header';
     header.textContent = groupKey;
@@ -97,7 +86,7 @@ function renderMergedGroup(groupKey, groupData) {
 
     const deleteBtn = document.createElement('button');
     deleteBtn.textContent = '刪除卡片';
-    deleteBtn.className = 'delete-fusion-btn';
+    deleteBtn.className = 'delete-fusion-btn';  // ➤ 指定 class 名稱
     deleteBtn.title = '刪除此融合卡片';
     deleteBtn.addEventListener('click', () => {
         group.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
@@ -107,69 +96,66 @@ function renderMergedGroup(groupKey, groupData) {
     });
     group.appendChild(deleteBtn);
 
-    // 👉 時間軸
-    const start = groupData.start;
-    const end = groupData.end;
+    const allTasks = groupData.tasks;
+    const startDates = allTasks.map(t => parseDate(t['開始日期'])).filter(d => !isNaN(d));
+    const projectEndDates = allTasks.map(t => parseDate(t['專案截止日期'])).filter(d => !isNaN(d));
+
+    const invalid = allTasks.filter(t =>
+        isNaN(parseDate(t['開始日期'])) || isNaN(parseDate(t['專案截止日期']))
+    );
+    if (invalid.length > 0) {
+        console.warn("❌ 以下任務的日期欄位格式錯誤：", invalid);
+        alert("有任務日期格式錯誤，請打開 Console 查看詳情！");
+        return;
+    }
+
+    if (startDates.length === 0 || projectEndDates.length === 0) {
+        alert("融合卡片失敗：日期欄位錯誤或遺失");
+        return;
+    }
+
+    const start = new Date(Math.min(...startDates));
+    const end = new Date(Math.max(...projectEndDates));
     const now = new Date();
-    now.setHours(0, 0, 0, 0);
-    const total = getOffsetDays(start, end) + 1;
 
     const timeline = document.createElement('div');
     timeline.className = 'timeline-wrapper';
     timeline.innerHTML = `
-      <div class="timeline-label start">${groupData.startText}</div>
+      <div class="timeline-label start">${formatDate(start)}</div>
+      <div class="little-man" style="left: ${todayPosition(start, end)}%"></div>
       <div class="timeline-line"></div>
-      <div class="timeline-label end">${groupData.endText}</div>
+      <div class="timeline-label end">${formatDate(end)}</div>
     `;
-
-    const littleMan = document.createElement('div');
-    littleMan.className = 'little-man';
-    littleMan.style.left = `${todayPosition(start, end)}%`;
-    littleMan.style.transform = 'translateX(-50%)';
-    timeline.appendChild(littleMan);
     group.appendChild(timeline);
 
-    // 👉 顏色與圖例
     const colorMap = {};
     const legend = document.createElement("div");
     legend.className = "legend-area";
 
-    const sortedTasks = [...groupData.tasks]
-        .filter(t => parseDate(t['結束日期']) > now)
-        .sort((a, b) => {
-            const daysA = getOffsetDays(now, parseDate(a['結束日期']));
-            const daysB = getOffsetDays(now, parseDate(b['結束日期']));
-            return daysA - daysB;
-        });
+    const sortedTasks = [...allTasks].filter(t => parseDate(t['結束日期']) > now).sort((a, b) => {
+        const daysA = getDaysBetween(now, parseDate(a['結束日期']));
+        const daysB = getDaysBetween(now, parseDate(b['結束日期']));
+        return daysA - daysB;
+    });
 
     sortedTasks.forEach(t => {
-        const taskStart = parseDate(t['開始日期']);
-        const taskEnd = parseDate(t['結束日期']);
-        taskStart.setHours(0, 0, 0, 0);
-        taskEnd.setHours(0, 0, 0, 0);
-
-        const offset = getOffsetDays(start, taskStart);
-        const duration = getOffsetDays(taskStart, taskEnd) + 1;
-
-        const wrapper = document.createElement('div');
-        wrapper.className = 'task-bar-wrapper';
-        wrapper.style.position = 'relative';
-
         const bar = document.createElement('div');
         bar.className = 'task-bar';
-        bar.style.position = 'absolute';
-        bar.style.left = `${(offset / total) * 100}%`;
-        bar.style.width = `${(duration / total) * 100}%`;
-        bar.style.transform = 'translateX(-50%)';
 
-        const remainingDays = getOffsetDays(now, taskEnd);
+        const taskStart = parseDate(t['開始日期']);
+        const taskEnd = parseDate(t['結束日期']);
+        const offset = getDaysBetween(start, taskStart);
+        const duration = getDaysBetween(taskStart, taskEnd);
+        const total = getDaysBetween(start, end);
+        bar.style.marginLeft = `${(offset / total) * 100}%`;
+        bar.style.width = `${(duration / total) * 100}%`;
+
+        const remainingDays = getDaysBetween(now, taskEnd);
         const projectName = t['專案名稱'];
-        const taskName = t['任務名稱'];
         bar.innerHTML = `<img src='/static/clock.png' style='width:16px;height:16px;margin-right:4px;'>${remainingDays}天`;
-        bar.setAttribute('data-subtask', `${projectName} - ${taskName}`);
+        bar.setAttribute('data-subtask', `${projectName} - ${t['任務名稱']}`);
         bar.title = `開始：${t['開始日期']}\n結束：${t['結束日期']}`;
 
-        // 顏色套用
         const color = getProjectColor(projectName);
         bar.style.background = color;
         bar.style.boxShadow = `0 0 6px ${color}`;
@@ -182,8 +168,7 @@ function renderMergedGroup(groupKey, groupData) {
             legend.appendChild(legendItem);
         }
 
-        wrapper.appendChild(bar);
-        group.appendChild(wrapper);
+        group.appendChild(bar);
     });
 
     group.appendChild(legend);
@@ -203,8 +188,9 @@ function fetchTasksAndInit() {
             categories.forEach(cat => shelf.appendChild(createShelfCard(cat)));
         });
 }
+
 // ===========================
-// ✨ 拖曳融合操作設定
+// 🌟 拖曳融合操作設定
 // ===========================
 function setupDragAndFusion() {
     const dropZone = document.getElementById("fusionDropZone");
@@ -230,6 +216,7 @@ function setupDragAndFusion() {
             }
         });
     });
+
 
     document.getElementById("createFusion").addEventListener("click", () => {
         const fusionName = document.getElementById("fusionName").value.trim();
