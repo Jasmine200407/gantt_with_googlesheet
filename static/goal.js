@@ -167,10 +167,10 @@ function renderMergedGroup(groupKey, groupData) {
         const taskEnd = parseDate(t['結束日期']);
         const offset = getOffsetDays(start, taskStart);
         const duration = getOffsetDays(taskStart, taskEnd) + 1;
-        bar.style.position = 'absolute';
-        bar.style.left = `${(offset / total) * 100}%`;
+        bar.style.marginLeft = `${(offset / total) * 100}%`;
         bar.style.width = `${(duration / total) * 100}%`;
-        bar.style.transform = 'translateX(-50%)';
+
+        
         const remainingDays = getOffsetDays(now, taskEnd);
         const projectName = t['專案名稱'];
         bar.innerHTML = `<img src='/static/clock.png' style='width:16px;height:16px;margin-right:4px;'>${remainingDays}天`;
