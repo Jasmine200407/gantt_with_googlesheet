@@ -36,6 +36,7 @@ function getDaysBetween(start, end) {
 function todayPosition(start, end) {
     const total = getDaysBetween(start, end);
     const now = new Date();
+    now.setHours(0, 0, 0, 0); // ✅ 將 now 設為今日 00:00
     const passed = getDaysBetween(start, now);
     return Math.min(100, Math.max(0, (passed / total) * 100));
 }
