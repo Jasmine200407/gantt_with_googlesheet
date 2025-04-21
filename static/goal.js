@@ -18,18 +18,23 @@ function formatDate(date) {
     return `${m}/${d}`;
 }
 
-function getDaysBetween(start, end) {
-  return Math.floor((end - start) / (1000 * 60 * 60 * 24)) + 1;
+function getOffsetDays(start, date) {
+  const msPerDay = 1000 * 60 * 60 * 24;
+  return Math.floor((date - start) / msPerDay);
+}
+
+function getDurationDays(start, end) {
+  const msPerDay = 1000 * 60 * 60 * 24;
+  return Math.floor((end - start) / msPerDay) + 1;
 }
 
 function todayPosition(start, end) {
-    const total = getDaysBetween(start, end);
-    const now = new Date();
-    now.setHours(0, 0, 0, 0); // ✅ 將 now 設為今日 00:00
-    const passed = getDaysBetween(start, now);
-    return Math.min(100, Math.max(0, (passed / total) * 100));
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  const total = getDurationDays(start, end);
+  const passed = getOffsetDays(start, now);
+  return Math.min(100, Math.max(0, (passed / total) * 100));
 }
-
 
 // ===========================
 // 📦 書櫃卡片產生器
@@ -147,9 +152,9 @@ function renderMergedGroup(groupKey, groupData) {
 
         const taskStart = parseDate(t['開始日期']);
         const taskEnd = parseDate(t['結束日期']);
-        const offset = getDaysBetween(start, taskStart);
-        const duration = getDaysBetween(taskStart, taskEnd);
-        const total = getDaysBetween(start, end);
+        const offset = getOffsetDays(start, taskStart);
+        const duration = getDurationDays(taskStart, taskEnd);
+        const total = getDurationDays(start, end);
         bar.style.marginLeft = `${(offset / total) * 100}%`;
         bar.style.width = `${(duration / total) * 100}%`;
 
