@@ -637,7 +637,7 @@ input[list] {
 
 /* === 🧩 書櫃式融合卡片系統（新增功能樣式） === */
 
-/* === 🧱 基本結構佈局 === */
+/* === 🌌 左右欄基礎排版 === */
 #ganttContainer {
   display: flex;
   flex-direction: row;
@@ -649,24 +649,7 @@ input[list] {
   flex-wrap: wrap;
 }
 
-.left-side,
-.right-side {
-  flex: 1;
-  box-sizing: border-box;
-}
-
-/* === 🖥️ 預設：桌面左右並排 === */
-#ganttContainer {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: flex-start;
-  width: 100%;
-  gap: 1rem;
-  flex-wrap: wrap;
-  box-sizing: border-box;
-}
-
+/* 左右欄各自佔一半（桌面） */
 .left-side,
 .right-side {
   width: 50%;
@@ -674,23 +657,41 @@ input[list] {
   box-sizing: border-box;
 }
 
-/* === 📦 卡片區樣式 === */
+/* 卡片容器樣式 */
 #fusionResult {
   width: 100%;
   box-sizing: border-box;
 }
 
+/* 任務卡片樣式（桌面預設） */
 #fusionResult .task-group {
   width: 80%;
   max-width: 100%;
-  margin: 0 auto 1.5rem auto;  /* 中間置中 + 下方間距 */
+  margin: 0 auto 1.5rem auto;
   padding: 0;
   box-sizing: border-box;
 }
-/* === 📱 響應式調整 === */
+
+/* === 📱 響應式調整（平板與手機） === */
 @media (max-width: 1100px) {
   #ganttContainer {
     flex-direction: column !important;
+  }
+
+  .left-side,
+  .right-side,
+  #taskManagerContainer {
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-sizing: border-box;
+  }
+
+  #fusionResult .task-group {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto 1.5rem auto !important;
+    padding: 0 !important;
   }
 
   .filter-bar {
@@ -716,41 +717,9 @@ input[list] {
     height: 80px;
     font-size: 0.9rem;
   }
-}
 
-@media (max-width: 1100px) {
-  #ganttContainer {
-    flex-direction: column !important;
-  }
-
-  .left-side,
-  .right-side,
-  #taskManagerContainer {
-    width: 100% !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
-
-  #fusionDropZone {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  #fusionResult .task-group {
-    width: 100% !important;
-    max-width: 100% !important;
-  }
-}
-
-#fusionResult .task-group {
-  width: 80%;
-  max-width: 100%;
-  margin: 0 auto;
-}
-
-@media (max-width: 768px) {
-  #fusionResult .task-group {
-    width: 100%;
+  .task-group {
+    margin-bottom: 1.5rem;
   }
 }
 
