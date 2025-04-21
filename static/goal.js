@@ -93,7 +93,7 @@ function renderMergedGroup(groupKey, groupData) {
 
     const deleteBtn = document.createElement('button');
     deleteBtn.textContent = '刪除卡片';
-    deleteBtn.className = 'delete-fusion-btn';  // ➤ 指定 class 名稱
+    deleteBtn.className = 'delete-fusion-btn';
     deleteBtn.title = '刪除此融合卡片';
     deleteBtn.addEventListener('click', () => {
         group.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
@@ -129,10 +129,15 @@ function renderMergedGroup(groupKey, groupData) {
     timeline.className = 'timeline-wrapper';
     timeline.innerHTML = `
       <div class="timeline-label start">${formatDate(start)}</div>
-      <div class="little-man" style="left: ${todayPosition(start, end)}%"></div>
       <div class="timeline-line"></div>
       <div class="timeline-label end">${formatDate(end)}</div>
     `;
+
+    const littleMan = document.createElement('div');
+    littleMan.className = 'little-man';
+    littleMan.style.left = `${todayPosition(start, end)}%`;
+    timeline.appendChild(littleMan);
+
     group.appendChild(timeline);
 
     const colorMap = {};
@@ -146,6 +151,9 @@ function renderMergedGroup(groupKey, groupData) {
     });
 
     sortedTasks.forEach(t => {
+        const barWrapper = document.createElement('div');
+        barWrapper.className = 'task-bar-wrapper';
+
         const bar = document.createElement('div');
         bar.className = 'task-bar';
 
@@ -176,7 +184,8 @@ function renderMergedGroup(groupKey, groupData) {
             legend.appendChild(legendItem);
         }
 
-        group.appendChild(bar);
+        barWrapper.appendChild(bar);
+        group.appendChild(barWrapper);
     });
 
     group.appendChild(legend);
